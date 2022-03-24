@@ -18,7 +18,7 @@ class CreateCommentsTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id');
             $table->enum('rating', ['like', 'dislike', 'normal'])->default('normal');
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->timestamps();
         });
     }

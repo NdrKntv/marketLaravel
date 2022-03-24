@@ -1,8 +1,9 @@
 <x-layout>
     <section class="d-flex flex-column mt-3">
         <a href="#" class="card bg-light text-black mt-3">
-            <img class="card-img" src="..." alt="Card image" style="height: 200px">
-            <div class="card-img-overlay">
+            <img class="card-img" src="/images/books_category_bg.jfif" alt="Card image" style="height: 270px;
+             object-fit: cover; filter: blur(3px)">
+            <div class="card-img-overlay" style="text-shadow: 0px 0px 3px #FFFFFF;">
                 <h2 class="card-title">Books</h2>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab alias amet cum
                     debitis dignissimos, dolores ea eius excepturi id, impedit in inventore, itaque iusto magnam nam
@@ -15,9 +16,10 @@
             </div>
         </a>
         <a href="#" class="card bg-light text-black mt-3">
-            <img class="card-img" src="..." alt="Card image" style="height: 270px">
-            <div class="card-img-overlay">
-                <h2 class="card-title">Bugs</h2>
+            <img class="card-img" src="/images/bags_category_bg.jpg" alt="Card image" style="height: 270px;
+            object-fit: cover; filter: blur(3px)">
+            <div class="card-img-overlay" style="text-shadow: 0px 0px 3px #FFFFFF;">
+                <h2 class="card-title">Bags</h2>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab alias amet cum
                     debitis dignissimos, dolores ea eius excepturi id, impedit in inventore, itaque iusto magnam nam
                     natus nesciunt obcaecati praesentium quae quaerat quia quo sint suscipit tenetur velit veniam. At
@@ -29,8 +31,9 @@
             </div>
         </a>
         <a href="#" class="card bg-light text-black mt-3">
-            <img class="card-img" src="..." alt="Card image" style="height: 270px">
-            <div class="card-img-overlay">
+            <img class="card-img" src="/images/sport_inventory_category_bg.jpg" alt="Card image" style="height: 270px;
+             object-fit: cover; filter: blur(3px)">
+            <div class="card-img-overlay" style="text-shadow: 0px 0px 3px #FFFFFF;">
                 <h2 class="card-title">Sport inventory</h2>
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab alias amet cum
                     debitis dignissimos, dolores ea eius excepturi id, impedit in inventore, itaque iusto magnam nam

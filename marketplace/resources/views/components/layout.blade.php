@@ -11,7 +11,7 @@
 <body>
 
 <div class="container">
-    <header class="container">
+    <header class="container border-bottom">
         <nav class="navbar navbar-light bg-light justify-content-around row">
             <a class="navbar-brand col-1" href="/">Home</a>
             <div class="col-2" x-data="{ open: false }">
@@ -43,7 +43,7 @@
             <form class="form-inline col-4">
                 <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
                        aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
             </form>
             <div class="col-3 nav-item">
                 <a href="#" class="nav-link"></a>
@@ -56,7 +56,7 @@
     <main>
         {{$slot}}
     </main>
-    <footer class="bg-secondary mt-3" style="height: 100px">
+    <footer class="bg-secondary mt-3" style="height: 75px">
 
     </footer>
 </div>
