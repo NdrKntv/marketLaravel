@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TagFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -15,9 +14,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'category_id' => Category::all()->random()->id,
-            'title' => $this->faker->word(),
-            'slug' => $this->faker->slug()
+            'description' => $this->faker->paragraph
         ];
     }
 }

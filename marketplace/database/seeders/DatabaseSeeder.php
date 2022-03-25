@@ -2,7 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +19,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // User::factory(10)->create();
+        $cats = [['Books', 'books_category_bg.jfif', 'books'],
+            ['Bags', 'bags_category_bg.jpg', 'bags'],
+            ['Sport equipment', 'sport_inventory_category_bg.jpg', 'sport-equipment']];
+        foreach ($cats as $c) {
+            Category::factory()->create([
+                'title' => $c[0],
+                'image' => $c[1],
+                'slug' => $c[2]
+            ]);
+        }
+        User::factory(5)->create();
+        Product::factory(30)->create();
+        Tag::factory(20)->create();
+        Comment::factory(50)->create();
+        DB::table('product_tag')->insert([
+            'tag_id' => $current = Tag::all()->random()->id,
+            'product_id' => Product::all()->where('category_id', '=', $current)->random()->id
+        ]);
     }
 }
