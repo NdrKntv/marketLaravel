@@ -1,6 +1,6 @@
 <x-layout>
-    <section class="d-flex flex-column mt-3">
-        <a href="#" class="card bg-light text-black mt-3">
+    <section class="d-flex flex-column">
+        <a href="/books" class="card bg-light text-black mt-3">
             <img class="card-img" src="/images/books_category_bg.jfif" alt="Card image" style="height: 270px;
              object-fit: cover; filter: blur(3px)">
             <div class="card-img-overlay" style="text-shadow: 0px 0px 3px #FFFFFF;">
