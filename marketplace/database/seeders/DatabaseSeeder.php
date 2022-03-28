@@ -30,11 +30,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         User::factory(5)->create();
-        Product::factory(30)->create();
+        Product::factory(70)->create();
         Tag::factory(20)->create();
-        Comment::factory(50)->create();
+        Comment::factory(150)->create();
 
-        for ($i = 0; $i < 60; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $cId = Category::all()->random()->id;
             DB::table('product_tag')->insert([
                 'tag_id' => Tag::where('category_id', $cId)->get()->random()->id,
