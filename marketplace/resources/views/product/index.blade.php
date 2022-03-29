@@ -1,7 +1,7 @@
 <x-layout>
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">
-            {{Breadcrumbs::render('categories', $products->first()->category)}}
+            {{Breadcrumbs::render('categories', $category)}}
         </div>
         <div class="row justify-content-center">
             <article class="col-3 p-3">
@@ -26,25 +26,15 @@
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;">
-                                <div class="bg-secondary px-1 rounded">
-                                    <input class="form-check-input" type="checkbox" value="{{old('tagCheck')}}"
-                                           id="tag">
-                                    <label class="form-check-label" for="tag">
-                                        Tag tag 1234
-                                    </label>
-                                </div>
-                                <div class="bg-secondary px-1 rounded mt-1">
-                                    <input class="form-check-input" type="checkbox" value="" id="tag1">
-                                    <label class="form-check-label" for="tag1">
-                                        Tag tag 1234
-                                    </label>
-                                </div>
-                                <div class="bg-secondary px-1 rounded mt-1">
-                                    <input class="form-check-input" type="checkbox" value="" id="tag2">
-                                    <label class="form-check-label" for="tag2">
-                                        Tag tag 1234
-                                    </label>
-                                </div>
+                                @foreach($category->tags as $tag)
+                                    <div class="bg-secondary px-1 rounded{{$loop->iteration>1?' mt-1':''}}">
+                                        <input class="form-check-input" type="checkbox" id="tag{{$tag->id}}"
+                                               name="tag{{$tag->id}}" value="{{old('tag'.$tag->id)}}">
+                                        <label class="form-check-label" for="tag{{$tag->id}}">
+                                            {{$tag->title}}
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="mt-3">
@@ -83,7 +73,8 @@
                 @if($products->count())
                     @foreach($products as $product)
                         <div class="card mb-3" style="width: 16rem;">
-                            <a href="{{request()->url().'/'.$product->slug}}"><img src="images/default-product.jpg" class="card-img-top" alt="..."></a>
+                            <a href="{{request()->url().'/'.$product->slug}}"><img src="images/default-product.jpg"
+                                                                                   class="card-img-top" alt="..."></a>
                             <div class="card-body">
                                 <h5 class="card-title">{{Str::words($product->title, 5, $end='...')}}</h5>
                                 <p class="d-inline-block fw-bold">{{$product->price}}$</p>
@@ -91,14 +82,25 @@
                                 @if($product->newness==0)
                                     <span class="badge rounded-pill bg-secondary">Used</span>
                                 @endif
-                                <p class="card-text">{{Str::words($product->description, 15, $end='...')}}</p>
+                                <p class="card-text">{{Str::words($product->description, 9, $end='...')}}</p>
+                                <div class="rounded mb-2">
+                                    @foreach($product->tags as $tag)
+                                        <a href="{{request()->url().'/'.$tag->slug}}"
+                                           class="d-inline-block bg-secondary p-1 rounded text-white mb-1 text-decoration-none">{{$tag->title}}</a>
+                                    @endforeach
+                                </div>
                                 <div>
                                     <a href="{{request()->url().'/'.$product->slug}}" class="btn btn-secondary">More
                                         details</a>
                                     @auth
-                                        <a href="#" class="btn btn-secondary" style="margin-left: 10px"><img
-                                                src="images/empty-star.png" alt="Favorites"
-                                                style="height: 20px; width: 20px"></a>
+                                        <form method="POST" action="/favorites/{{$product->id}}" class="d-inline-block">
+                                            @csrf
+                                            <button type="submit" class="btn btn-secondary" style="margin-left: 4px">
+                                                <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
+                                                     style="height: 20px; width: 20px">
+                                            </button>
+                                        </form>
+                                        <a href="#" class="btn btn-secondary" style="margin-left: 4px">Buy</a>
                                     @endauth
                                 </div>
                             </div>

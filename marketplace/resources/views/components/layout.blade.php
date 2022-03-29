@@ -13,7 +13,7 @@
     <header class="container border-bottom">
         <nav class="navbar navbar-light bg-light justify-content-around row">
             <a class="navbar-brand col-1" href="/">Home</a>
-           <x-category-dropdown/>
+            <x-category-dropdown/>
             <form class="form-inline col-4">
                 <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
                        aria-label="Search">
@@ -26,10 +26,20 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <ul class="dropdown-menu" style="max-width: 220px" aria-labelledby="dropdownMenuButton1">
+                            @foreach(auth()->user()->favorites as $fav)
+                                <li>
+                                    <a class="dropdown-item {{request()->is($fav->category->slug.'/'.$fav->slug)?'bg-secondary text-white':''}}"
+                                       href="/{{$fav->category->slug.'/'.$fav->slug}}">
+                                        <span>{{Str::words($fav->title, 3, $end='...')}}</span>
+                                        <div>
+                                            <span class="fw-bold">{{$fav->price}}$</span>
+                                            <span>{{$fav->in_stock}}</span>
+                                        </div>
+                                        <div>From: {{$fav->category->title}}</div>
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="dropdown">

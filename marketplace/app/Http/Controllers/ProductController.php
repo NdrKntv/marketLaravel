@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index(Category $category)
     {
-        return view('product.index', ['products' => Product::latest()
+        return view('product.index', ['category'=>$category ,'products' => Product::latest()
             ->where([['category_id', $category->id], ['active', 1]])->paginate(9)->withQueryString()]);
     }
 

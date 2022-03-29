@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
@@ -16,3 +17,5 @@ Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth')
 
 Route::name('products')->get('{category:slug}', [ProductController::class, 'index']);
 Route::name('product')->get('{category:slug}/{product:slug}', [ProductController::class, 'show']);
+
+Route::post('favorites/{product:id}', [FavoritesController::class, 'store'])->middleware('auth');
