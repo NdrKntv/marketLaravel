@@ -15,3 +15,4 @@ Route::post('login', [SessionController::class, 'store'])->middleware('guest');
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 
 Route::get('{category:slug}', [ProductController::class, 'index']);
+Route::get('{category:slug}/{product:slug}', [ProductController::class, 'show']);

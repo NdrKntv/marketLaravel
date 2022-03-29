@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Http\Request;
+
 
 class ProductController extends Controller
 {
@@ -12,5 +12,10 @@ class ProductController extends Controller
     {
         return view('product.index', ['products' => Product::latest()
             ->where([['category_id', $category->id], ['active', 1]])->paginate(9)->withQueryString()]);
+    }
+
+    public function show(Category $category, Product $product)
+    {
+        return view('product.show', ['product'=>$product]);
     }
 }
