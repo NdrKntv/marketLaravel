@@ -1,5 +1,8 @@
 <x-layout>
     <div class="container">
+        <div class="border-bottom d-inline-block mb-2">
+            {{Breadcrumbs::render('categories', $products->first()->category)}}
+        </div>
         <div class="row justify-content-center">
             <article class="col-3 p-3">
                 <h4>Filters</h4>
@@ -80,7 +83,7 @@
                 @if($products->count())
                     @foreach($products as $product)
                         <div class="card mb-3" style="width: 16rem;">
-                            <img src="..." class="card-img-top" alt="...">
+                            <a href="{{request()->url().'/'.$product->slug}}"><img src="images/default-product.jpg" class="card-img-top" alt="..."></a>
                             <div class="card-body">
                                 <h5 class="card-title">{{Str::words($product->title, 5, $end='...')}}</h5>
                                 <p class="d-inline-block fw-bold">{{$product->price}}$</p>
