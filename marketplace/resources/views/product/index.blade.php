@@ -1,4 +1,4 @@
-<x-layout>
+<x-Layout>
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">
             {{Breadcrumbs::render('categories', $category)}}
@@ -93,13 +93,28 @@
                                     <a href="{{request()->url().'/'.$product->slug}}" class="btn btn-secondary">More
                                         details</a>
                                     @auth
-                                        <form method="POST" action="/favorites/{{$product->id}}" class="d-inline-block">
-                                            @csrf
-                                            <button type="submit" class="btn btn-secondary" style="margin-left: 4px">
-                                                <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
-                                                     style="height: 20px; width: 20px">
-                                            </button>
-                                        </form>
+                                        @if(auth()->user()->favorites->contains($product->id))
+                                            <form method="POST" action="/favorites/{{$product->id}}"
+                                                  class="d-inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-secondary"
+                                                        style="margin-left: 4px">
+                                                    <img src="{{asset('images/filled-star.png')}}" alt="Favorites"
+                                                         style="height: 20px; width: 20px">
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="/favorites/{{$product->id}}"
+                                                  class="d-inline-block">
+                                                @csrf
+                                                <button type="submit" class="btn btn-secondary"
+                                                        style="margin-left: 4px">
+                                                    <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
+                                                         style="height: 20px; width: 20px">
+                                                </button>
+                                            </form>
+                                        @endif
                                         <a href="#" class="btn btn-secondary" style="margin-left: 4px">Buy</a>
                                     @endauth
                                 </div>
@@ -113,4 +128,4 @@
             <nav class="d-flex justify-content-center pt-3">{{$products->links()}}</nav>
         </div>
     </div>
-</x-layout>
+</x-Layout>

@@ -25,9 +25,14 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                                {{$favorites->count()}}
+                            </span>
                         </button>
-                        <ul class="dropdown-menu" style="max-width: 220px" aria-labelledby="dropdownMenuButton1">
-                            @foreach(auth()->user()->favorites as $fav)
+                        <ul class="dropdown-menu" style="max-height: 350px; overflow-y: scroll; left: -145px;"
+                            aria-labelledby="dropdownMenuButton1">
+                            @foreach($favorites as $fav)
                                 <li>
                                     <a class="dropdown-item {{request()->is($fav->category->slug.'/'.$fav->slug)?'bg-secondary text-white':''}}"
                                        href="/{{$fav->category->slug.'/'.$fav->slug}}">

@@ -19,3 +19,4 @@ Route::name('products')->get('{category:slug}', [ProductController::class, 'inde
 Route::name('product')->get('{category:slug}/{product:slug}', [ProductController::class, 'show']);
 
 Route::post('favorites/{product:id}', [FavoritesController::class, 'store'])->middleware('auth');
+Route::delete('favorites/{product:id}', [FavoritesController::class, 'destroy'])->middleware('auth');
