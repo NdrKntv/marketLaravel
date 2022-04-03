@@ -11,6 +11,21 @@ class Product extends Model
 
     protected $guarded = [];
 
+    public function scopeTagFilter($query, $fTags = [])
+    {
+        $query->when($fTags ?? false, fn($query, $fTags) =>
+        $query->whereHas('tags', fn($query) =>
+        $query->whereIn('tag_id', $fTags)));
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, fn($query, $search) => $query->where('title', 'like', '%' . $search . '%')
+            ->orWhere('description', 'like', '%' . $search . '%')
+        );
+
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

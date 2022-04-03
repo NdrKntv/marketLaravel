@@ -7,7 +7,7 @@
             <article class="col-3 p-3">
                 <h4>Filters</h4>
                 <div class="mt-3">
-                    <form method="POST" action="" class="d-flex align-content-center flex-column">
+                    <form method="GET" action="" class="d-flex align-content-center flex-column">
                         <div class="mt-3" x-data="{ open: false }">
                             <button @click="open=!open" class="btn btn-secondary dropdown-toggle" type="button">
                                 Tags
@@ -29,7 +29,7 @@
                                 @foreach($category->tags as $tag)
                                     <div class="bg-secondary px-1 rounded{{$loop->iteration>1?' mt-1':''}}">
                                         <input class="form-check-input" type="checkbox" id="tag{{$tag->id}}"
-                                               name="tag{{$tag->id}}" value="{{old('tag'.$tag->id)}}">
+                                               name="{{$tag->slug}}" {{request($tag->slug)?'checked':''}}>
                                         <label class="form-check-label" for="tag{{$tag->id}}">
                                             {{$tag->title}}
                                         </label>
@@ -38,31 +38,49 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <input class="form-check-input" type="checkbox" id="new" value="new">
+                            <input class="form-check-input" type="checkbox" id="new"
+                                   name="new" {{request('new')?'checked':''}}>
                             <label class="form-check-label" for="new">Only new</label>
-                            <input class="form-check-input" type="checkbox" id="available" value="available">
+                            <input class="form-check-input" type="checkbox" id="available"
+                                   name="available" {{request('available')?'checked':''}}>
                             <label class="form-check-label" for="available">Only available now</label>
                         </div>
                         <div class="mt-3">
                             <label for="range" class="form-label">Enter your price limits</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" name="priceSwitch"
-                                       id="flexSwitchCheckChecked" value="{{old('priceSwitch')}}">
+                                <input class="form-check-input" type="checkbox" role="switch" name="minPrice"
+                                       id="flexSwitchCheckChecked" {{request('minPrice')?'checked':''}}>
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Enter MIN price</label>
                             </div>
-                            <input type="range" name="priceRange" class="form-range" min="1" max="1000" id="range"
-                                   oninput="this.form.priceInt.value=this.value">
-                            <input type="number" placeholder="Price limit" name="priceInt" value="{{old('priceInt')}}"
-                                   oninput="this.form.priceRange.value=this.value">
+                            <input type="range" class="form-range" min="{{$products->min('price')}}"
+                                   max="{{$products->max('price')}}" id="range" value="{{request('priceLimit')??'0'}}">
+                            <span>Price limit: </span>
+                            <span id="rangeInt">no price limits</span>
+                            <script>
+                                let limit = document.getElementById('range');
+                                let min = document.getElementById('range').min;
+                                let span = document.getElementById('rangeInt');
+                                if (limit.value !== min) {
+                                    limit.setAttribute('name', 'priceLimit')
+                                    span.textContent = limit.value;
+                                }
+                                limit.addEventListener('change', function (e) {
+                                    span.textContent = e.target.value;
+                                    limit.setAttribute('name', 'priceLimit');
+                                })
+                            </script>
                         </div>
                         <div class="mt-3">
                             <select class="form-select form-select-sm" aria-label=".form-select-sm" name="sortBy">
-                                <option selected>Show latest</option>
-                                <option value="1">Show most popular</option>
-                                <option value="2">Show cheapest</option>
-                                <option value="3">Show most expensive</option>
+                                <option value="l" {{request('sortBy')!='l'?:'selected'}}>Show latest</option>
+                                <option value="p" {{request('sortBy')!='p'?:'selected'}}>Show most popular</option>
+                                <option value="c" {{request('sortBy')!='c'?:'selected'}}>Show cheapest</option>
+                                <option value="e" {{request('sortBy')!='e'?:'selected'}}>Show most expensive</option>
                             </select>
                         </div>
+                        @if(request('search'))
+                            <input type="hidden" name="search" value="{{request('search')}}">
+                        @endif
                         <div class="m-auto mt-3">
                             <button class="btn btn-secondary" type="submit">Show results</button>
                         </div>
@@ -85,7 +103,7 @@
                                 <p class="card-text">{{Str::words($product->description, 9, $end='...')}}</p>
                                 <div class="rounded mb-2">
                                     @foreach($product->tags as $tag)
-                                        <a href="{{request()->url().'/'.$tag->slug}}"
+                                        <a href="{{request()->url().'?'.$tag->slug.'=on'}}"
                                            class="d-inline-block bg-secondary p-1 rounded text-white mb-1 text-decoration-none">{{$tag->title}}</a>
                                     @endforeach
                                 </div>

@@ -14,10 +14,17 @@
         <nav class="navbar navbar-light bg-light justify-content-around row">
             <a class="navbar-brand col-1" href="/">Home</a>
             <x-category-dropdown/>
-            <form class="form-inline col-4">
-                <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
-                       aria-label="Search">
-                <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+            <form class="form-inline col-4" method="GET" action="">
+                @if(request()->routeIs('products'))
+                    <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
+                           aria-label="Search" name="search" value="{{request('search')??''}}">
+                    @foreach($_GET as $k=>$v)
+                        @if($k!=='search')
+                            <input type="hidden" name="{{$k}}" value="{{$v}}">
+                        @endif
+                    @endforeach
+                    <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+                @endif
             </form>
             <div class="col-4 nav-item d-flex justify-content-end px-0">
                 @auth()
@@ -53,7 +60,7 @@
                             {{auth()->user()->name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">My products</a></li>
+                            <li><a class="dropdown-item" href="#">My profile</a></li>
                             <li><a class="dropdown-item" href="#">Account settings</a></li>
                             <li>
                                 <form method="POST" action="/logout">
