@@ -25,6 +25,7 @@ class CreateProductsTable extends Migration
             $table->string('slug')->unique();
             $table->enum('in_stock', ['available', 'coming soon', 'on order'])->default('available');
             $table->boolean('newness')->default(1);
+            $table->mediumInteger('rating')->default(0);
             $table->boolean('active')->default(1);
             $table->timestamps();
         });

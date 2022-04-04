@@ -1,11 +1,10 @@
-<div class="col-2" x-data="{ open: false }">
-    @if(!request()->routeIs('home'))
-        <div class="dropdown">
-            <button @click="open=!open" class="btn btn-secondary dropdown-toggle" type="button"
-                    id="dropdownMenuButton">
-                {{$currentCategory->title??'Categories list'}}
-            </button>
-            <div x-show="open" @click.outside="open = false" style="position: absolute;
+<div x-data="{ open: false }">
+    <div class="dropdown">
+        <button @click="open=!open" class="btn btn-secondary dropdown-toggle" type="button"
+                id="dropdownMenuButton">
+            {{$currentCategory->title??'Categories list'}}
+        </button>
+        <div x-show="open" @click.outside="open = false" style="position: absolute;
     z-index: 1000;
     display: none;
     min-width: 10rem;
@@ -19,12 +18,11 @@
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;">
-                @foreach($categories as $category)
-                    <a class="dropdown-item" href="/{{$category->slug}}"
-                       style="{{isset($currentCategory)&&$currentCategory->id==$category->id?'background: #6c757d':''}}"
-                    >{{$category->title}}</a>
-                @endforeach
-            </div>
+            @foreach($categories as $category)
+                <a class="dropdown-item" href="/{{$category->slug}}"
+                   style="{{isset($currentCategory)&&$currentCategory->id==$category->id?'background: #6c757d':''}}"
+                >{{$category->title}}</a>
+            @endforeach
         </div>
-    @endif
+    </div>
 </div>

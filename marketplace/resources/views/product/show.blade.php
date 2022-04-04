@@ -120,7 +120,7 @@
                 <h1>{{$product->title}}</h1>
                 <div class="rounded mb-2">
                     @foreach($product->tags as $tag)
-                        <a href="{{request()->url().'/'.$tag->slug}}"
+                        <a href="{{route('products', $product->category->slug).'?'.$tag->slug.'=on'}}"
                            class="d-inline-block bg-secondary p-1 rounded text-white mb-1 text-decoration-none">{{$tag->title}}</a>
                     @endforeach
                 </div>
@@ -160,8 +160,39 @@
                     </div>
                 @endauth
             </div>
-            <article class="col-9">
-                comments
+            <article class="col-7">
+                <span style="font-size: 20px">Comments</span>
+                @if($product->comments->count()==0)
+                    <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
+                @endif
+                @foreach($product->comments as $comment)
+                    <div id="comment-div" class="p-2 mt-3 rounded"
+                         @switch($comment->rating)
+                         @case('dislike')
+                         style="background: #ff00005e"
+                         @break
+                         @case('like')
+                         style="background: #1bff005e"
+                         @break
+                         @default
+                         style="background: #ffff005e"
+                        @endswitch
+                    >
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <img src="{{$comment->user->avatar?:asset('images/default-avatar.png')}}"
+                                     alt="user_avatar"
+                                     style="height: 50px; width: 50px">
+                                <a href=""
+                                   style="color: black; text-decoration: none; vertical-align: top">{{$comment->user->name}}</a>
+                            </div>
+                            <img id="rating-img" src="{{asset('images/'.$comment->rating.'.png')}}"
+                                 alt="{{$comment->rating}}" style="height: 30px; width: 30px">
+                            <span>Published {{$comment->created_at->diffForHumans()}}</span>
+                        </div>
+                        <div>{{$comment->body}}</div>
+                    </div>
+                @endforeach
             </article>
         </section>
 

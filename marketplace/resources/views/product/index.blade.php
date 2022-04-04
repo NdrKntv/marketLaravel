@@ -26,7 +26,7 @@
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;">
-                                @foreach($category->tags as $tag)
+                                @foreach($categoryTags as $tag)
                                     <div class="bg-secondary px-1 rounded{{$loop->iteration>1?' mt-1':''}}">
                                         <input class="form-check-input" type="checkbox" id="tag{{$tag->id}}"
                                                name="{{$tag->slug}}" {{request($tag->slug)?'checked':''}}>
@@ -52,8 +52,8 @@
                                        id="flexSwitchCheckChecked" {{request('minPrice')?'checked':''}}>
                                 <label class="form-check-label" for="flexSwitchCheckChecked">Enter MIN price</label>
                             </div>
-                            <input type="range" class="form-range" min="{{$products->min('price')}}"
-                                   max="{{$products->max('price')}}" id="range" value="{{request('priceLimit')??'0'}}">
+                            <input type="range" class="form-range" min="{{$prices[1]}}"
+                                   max="{{$prices[0]}}" id="range" value="{{request('priceLimit')??'0'}}">
                             <span>Price limit: </span>
                             <span id="rangeInt">no price limits</span>
                             <script>
@@ -72,10 +72,17 @@
                         </div>
                         <div class="mt-3">
                             <select class="form-select form-select-sm" aria-label=".form-select-sm" name="sortBy">
-                                <option value="l" {{request('sortBy')!='l'?:'selected'}}>Show latest</option>
-                                <option value="p" {{request('sortBy')!='p'?:'selected'}}>Show most popular</option>
-                                <option value="c" {{request('sortBy')!='c'?:'selected'}}>Show cheapest</option>
-                                <option value="e" {{request('sortBy')!='e'?:'selected'}}>Show most expensive</option>
+                                <option value="created_at-DESC" {{request('sortBy')!='created_at-DESC'?:'selected'}}>
+                                    Show latest
+                                </option>
+                                <option value="rating-DESC" {{request('sortBy')!='rating-DESC'?:'selected'}}>Show most
+                                    popular
+                                </option>
+                                <option value="price-ASC" {{request('sortBy')!='price-ASC'?:'selected'}}>Show cheapest
+                                </option>
+                                <option value="price-DESC" {{request('sortBy')!='price-DESC'?:'selected'}}>Show most
+                                    expensive
+                                </option>
                             </select>
                         </div>
                         @if(request('search'))
@@ -91,8 +98,10 @@
                 @if($products->count())
                     @foreach($products as $product)
                         <div class="card mb-3" style="width: 16rem;">
-                            <a href="{{request()->url().'/'.$product->slug}}"><img src="images/default-product.jpg"
-                                                                                   class="card-img-top" alt="..."></a>
+                            <span class="position-absolute">{{$product->rating}}</span>
+                            <a href="{{request()->url().'/'.$product->slug}}"><img
+                                    src="{{asset('images/default-product.jpg')}}"
+                                    class="card-img-top" alt="..."></a>
                             <div class="card-body">
                                 <h5 class="card-title">{{Str::words($product->title, 5, $end='...')}}</h5>
                                 <p class="d-inline-block fw-bold">{{$product->price}}$</p>

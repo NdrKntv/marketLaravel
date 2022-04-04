@@ -13,7 +13,11 @@
     <header class="container border-bottom">
         <nav class="navbar navbar-light bg-light justify-content-around row">
             <a class="navbar-brand col-1" href="/">Home</a>
-            <x-category-dropdown/>
+            <div class="col-2">
+                @if(!request()->routeIs('home'))
+                    <x-category-dropdown/>
+                @endif
+            </div>
             <form class="form-inline col-4" method="GET" action="">
                 @if(request()->routeIs('products'))
                     <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
