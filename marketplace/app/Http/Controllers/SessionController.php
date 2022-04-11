@@ -22,13 +22,13 @@ class SessionController
         }
         session()->regenerate();
 
-        return redirect('/')->with('success', 'Hello, ' . auth()->user()->name);
+        return redirect(request('redirectLink')??'/')->with('success', 'Hello, ' . auth()->user()->name);
     }
 
     public function destroy()
     {
         auth()->logout();
 
-        return redirect('/')->with('success', 'Goodbye');
+        return back()->with('success', 'Goodbye');
     }
 }

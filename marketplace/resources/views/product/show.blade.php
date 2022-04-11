@@ -162,10 +162,36 @@
             </div>
             <article class="col-7">
                 <span style="font-size: 20px">Comments</span>
-                @if($product->comments->count()==0)
+                @guest
+                    <div>
+                        <span>You must authorise to leave comments: </span>
+                        <a href="/login">Log In</a>
+                        <span> or </span>
+                        <a href="/create-account">Create Account</a>
+                    </div>
+                @else
+                    <form method="POST" action="/{{$product->id}}/comment">
+                        @csrf
+                        <textarea name="body" placeholder="Write something about this product" rows="3"
+                                  cols="33"></textarea>
+                        <div class="p-1">
+                            <input class="form-check-input" type="radio" name="rate" id="likeRadio" value="like">
+                            <label class="form-check-label" for="likeRadio">Like</label>
+                            <input class="form-check-input" type="radio" name="rate" id="normRadio" checked value="normal">
+                            <label class="form-check-label" for="normRadio">Normal</label>
+                            <input class="form-check-input" type="radio" name="rate" id="dislikeRadio" value="dislike">
+                            <label class="form-check-label" for="dislikeRadio">Dislike</label>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+                        </div>
+                    </form>
+                @endguest
+{{--                {{dd($comments)}}--}}
+                @if($comments->count()==0)
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif
-                @foreach($product->comments as $comment)
+                @foreach($comments as $comment)
                     <div id="comment-div" class="p-2 mt-3 rounded"
                          @switch($comment->rating)
                          @case('dislike')

@@ -72,7 +72,7 @@
                         </div>
                         <div class="mt-3">
                             <select class="form-select form-select-sm" aria-label=".form-select-sm" name="sortBy">
-                                <option value="created_at-DESC" {{request('sortBy')!='created_at-DESC'?:'selected'}}>
+                                <option value="id-DESC" {{request('sortBy')!='id-DESC'?:'selected'}}>
                                     Show latest
                                 </option>
                                 <option value="rating-DESC" {{request('sortBy')!='rating-DESC'?:'selected'}}>Show most
@@ -98,7 +98,7 @@
                 @if($products->count())
                     @foreach($products as $product)
                         <div class="card mb-3" style="width: 16rem;">
-                            <span class="position-absolute">{{$product->rating}}</span>
+                            <span class="position-absolute">{{$product->id}}</span>
                             <a href="{{request()->url().'/'.$product->slug}}"><img
                                     src="{{asset('images/default-product.jpg')}}"
                                     class="card-img-top" alt="..."></a>

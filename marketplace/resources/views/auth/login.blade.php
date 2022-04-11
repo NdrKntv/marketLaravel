@@ -18,6 +18,7 @@
                 <p class="text-danger">{{$message}}</p>
                 @enderror
             </div>
+            <input type="hidden" name="redirectLink" value="{{$_SERVER['HTTP_REFERER']??''}}">
             <button type="submit" class="btn btn-primary">Log in</button>
         </form>
     </div>

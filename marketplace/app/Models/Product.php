@@ -36,7 +36,7 @@ class Product extends Model
 
     public function scopeOrderType($query, $type)
     {
-        $query->when($type ?? "created_at-DESC", function ($query, $type) {
+        $query->when($type ?? "id-DESC", function ($query, $type) {
             $colType = explode('-', $type);
             $query->orderBy($colType[0], $colType[1]);
         });

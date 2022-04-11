@@ -29,6 +29,7 @@ class ProductController extends Controller
 
     public function show(Category $category, Product $product)
     {
-        return view('product.show', ['product' => $product]);
+        return view('product.show', ['product' => $product,
+            'comments' => $product->comments()->latest()->with('user')->get()]);
     }
 }
