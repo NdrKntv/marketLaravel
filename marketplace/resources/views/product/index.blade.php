@@ -99,6 +99,28 @@
                     @foreach($products as $product)
                         <div class="card mb-3" style="width: 16rem;">
                             <span class="position-absolute">{{$product->id}}</span>
+                            @can('updateDelete', $product)
+                                <div class="position-absolute">
+                                    <form method="post" action="/product/{{$product->id}}" style="width: 30px">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="bg-danger">D</button>
+                                    </form>
+                                    <div x-data="{show:false}">
+                                        <button class="bg-gradient" @click="show=true">U</button>
+                                        <form x-show="show" @click.outside="show = false" method="post"
+                                              class="bg-light p-1 rounded-1"
+                                              action="/product/{{$product->id}}"
+                                              style="display: none; position: absolute; z-index: 1000">
+                                            @csrf
+                                            @method('patch')
+                                            <div>
+                                                <button type="submit" class="btn btn-secondary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endcan
                             <a href="{{request()->url().'/'.$product->slug}}"><img
                                     src="{{asset('images/default-product.jpg')}}"
                                     class="card-img-top" alt="..."></a>
@@ -113,7 +135,7 @@
                                 <div class="rounded mb-2">
                                     @foreach($product->tags as $tag)
                                         <a href="{{request()->url().'?'.$tag->slug.'=on'}}"
-                                           class="d-inline-block bg-secondary p-1 rounded text-white mb-1 text-decoration-none">{{$tag->title}}</a>
+                                           class="d-inline-block px-1 rounded mb-1 text-decoration-none">#{{$tag->title}}</a>
                                     @endforeach
                                 </div>
                                 <div>

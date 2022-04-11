@@ -177,7 +177,8 @@
                         <div class="p-1">
                             <input class="form-check-input" type="radio" name="rate" id="likeRadio" value="like">
                             <label class="form-check-label" for="likeRadio">Like</label>
-                            <input class="form-check-input" type="radio" name="rate" id="normRadio" checked value="normal">
+                            <input class="form-check-input" type="radio" name="rate" id="normRadio" checked
+                                   value="normal">
                             <label class="form-check-label" for="normRadio">Normal</label>
                             <input class="form-check-input" type="radio" name="rate" id="dislikeRadio" value="dislike">
                             <label class="form-check-label" for="dislikeRadio">Dislike</label>
@@ -187,7 +188,7 @@
                         </div>
                     </form>
                 @endguest
-{{--                {{dd($comments)}}--}}
+                {{--                {{dd($comments)}}--}}
                 @if($comments->count()==0)
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif
@@ -204,6 +205,41 @@
                          style="background: #ffff005e"
                         @endswitch
                     >
+                        @can('updateDelete', $comment)
+                            <div class="position-absolute" style="margin-left: 150px;">
+                                <form method="post" action="/comment/{{$comment->id}}" style="width: 30px">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="bg-danger">D</button>
+                                </form>
+                                <div x-data="{show:false}">
+                                    <button class="bg-gradient" @click="show=true">U</button>
+                                    <form x-show="show" @click.outside="show = false" method="post"
+                                          class="bg-light p-1 rounded-1"
+                                          action="/comment/{{$comment->id}}"
+                                          style="display: none; position: absolute; z-index: 1000">
+                                        @csrf
+                                        @method('patch')
+                                        <textarea name="body" placeholder="Write something about this product" rows="3"
+                                                  cols="33">{{$comment->body}}</textarea>
+                                        <div class="p-1">
+                                            <input class="form-check-input" type="radio" name="rate" id="1likeRadio"
+                                                   value="like" {{$comment->rating!='like'?:'checked'}}>
+                                            <label class="form-check-label" for="1likeRadio">Like</label>
+                                            <input class="form-check-input" type="radio" name="rate" id="1normRadio"
+                                                   value="normal" {{$comment->rating!='normal'?:'checked'}}>
+                                            <label class="form-check-label" for="1normRadio">Normal</label>
+                                            <input class="form-check-input" type="radio" name="rate" id="1dislikeRadio"
+                                                   value="dislike" {{$comment->rating!='dislike'?:'checked'}}>
+                                            <label class="form-check-label" for="1dislikeRadio">Dislike</label>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="btn btn-secondary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endcan
                         <div class="d-flex justify-content-between">
                             <div>
                                 <img src="{{$comment->user->avatar?:asset('images/default-avatar.png')}}"

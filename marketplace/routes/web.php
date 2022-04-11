@@ -21,6 +21,8 @@ Route::name('products')->get('{category:slug}', [ProductController::class, 'inde
 Route::name('product')->get('{category:slug}/{product:slug}', [ProductController::class, 'show']);
 //Comment actions
 Route::post('{product:id}/comment', [CommentController::class, 'store'])->middleware('auth');
+Route::delete('comment/{comment:id}', [CommentController::class, 'destroy'])->middleware('auth');
+Route::patch('comment/{comment:id}', [CommentController::class, 'update'])->middleware('auth');
 
 Route::post('favorites/{product:id}', [FavoritesController::class, 'store'])->middleware('auth');
 Route::delete('favorites/{product:id}', [FavoritesController::class, 'destroy'])->middleware('auth');
