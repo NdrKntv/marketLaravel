@@ -9,6 +9,7 @@ class CommentController extends Controller
 {
     public function store(Product $product)
     {
+        $this->authorize('createComment', $product);
         $product->comments()->create([
             'user_id' => request()->user()->id,
             'body' => request('body'),

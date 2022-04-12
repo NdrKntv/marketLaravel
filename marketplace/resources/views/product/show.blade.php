@@ -118,10 +118,11 @@
             </div>
             <div class="col-6">
                 <h1>{{$product->title}}</h1>
-                <div class="rounded mb-2">
+                <div>
                     @foreach($product->tags as $tag)
                         <a href="{{route('products', $product->category->slug).'?'.$tag->slug.'=on'}}"
-                           class="d-inline-block bg-secondary p-1 rounded text-white mb-1 text-decoration-none">{{$tag->title}}</a>
+                           style="border: 1px solid #6c757d"
+                           class="d-inline-block px-1 text-secondary rounded mb-1 text-decoration-none">#{{$tag->title}}</a>
                     @endforeach
                 </div>
                 <h4 class="mt-4 mb-4">{{$product->description}}</h4>
@@ -170,25 +171,27 @@
                         <a href="/create-account">Create Account</a>
                     </div>
                 @else
-                    <form method="POST" action="/{{$product->id}}/comment">
-                        @csrf
-                        <textarea name="body" placeholder="Write something about this product" rows="3"
-                                  cols="33"></textarea>
-                        <div class="p-1">
-                            <input class="form-check-input" type="radio" name="rate" id="likeRadio" value="like">
-                            <label class="form-check-label" for="likeRadio">Like</label>
-                            <input class="form-check-input" type="radio" name="rate" id="normRadio" checked
-                                   value="normal">
-                            <label class="form-check-label" for="normRadio">Normal</label>
-                            <input class="form-check-input" type="radio" name="rate" id="dislikeRadio" value="dislike">
-                            <label class="form-check-label" for="dislikeRadio">Dislike</label>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-secondary">Submit</button>
-                        </div>
-                    </form>
+                    @can('createComment', $product)
+                        <form method="POST" action="/{{$product->id}}/comment">
+                            @csrf
+                            <textarea name="body" placeholder="Write something about this product" rows="3"
+                                      cols="33"></textarea>
+                            <div class="p-1">
+                                <input class="form-check-input" type="radio" name="rate" id="likeRadio" value="like">
+                                <label class="form-check-label" for="likeRadio">Like</label>
+                                <input class="form-check-input" type="radio" name="rate" id="normRadio" checked
+                                       value="normal">
+                                <label class="form-check-label" for="normRadio">Normal</label>
+                                <input class="form-check-input" type="radio" name="rate" id="dislikeRadio"
+                                       value="dislike">
+                                <label class="form-check-label" for="dislikeRadio">Dislike</label>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-secondary">Submit</button>
+                            </div>
+                        </form>
+                    @endcan
                 @endguest
-                {{--                {{dd($comments)}}--}}
                 @if($comments->count()==0)
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif

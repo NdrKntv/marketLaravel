@@ -132,10 +132,10 @@
                                     <span class="badge rounded-pill bg-secondary">Used</span>
                                 @endif
                                 <p class="card-text">{{Str::words($product->description, 9, $end='...')}}</p>
-                                <div class="rounded mb-2">
+                                <div class="mb-2">
                                     @foreach($product->tags as $tag)
-                                        <a href="{{request()->url().'?'.$tag->slug.'=on'}}"
-                                           class="d-inline-block px-1 rounded mb-1 text-decoration-none">#{{$tag->title}}</a>
+                                        <a href="{{request()->url().'?'.$tag->slug.'=on'}}" style="border: 1px solid #6c757d"
+                                           class="d-inline-block px-1 rounded mb-1 text-decoration-none text-secondary">#{{$tag->title}}</a>
                                     @endforeach
                                 </div>
                                 <div>
