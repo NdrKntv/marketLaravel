@@ -133,7 +133,8 @@
                     @endif
                 </div>
                 <p class="d-inline-block fw-bold">{{$product->price}}$</p>
-                <p class="d-inline-block mx-5">Seller: <a href="">{{$product->user->name}}</a></p>
+                <p class="d-inline-block mx-5">Seller: <a
+                        href="/user{{$product->user->id}}">{{$product->user->name}}</a></p>
                 <p class="d-inline-block">Stored: {{$product->created_at->diffForHumans()}}</p>
                 @auth
                     <div>
@@ -260,6 +261,5 @@
                 @endforeach
             </article>
         </section>
-
     </div>
 </x-Layout>

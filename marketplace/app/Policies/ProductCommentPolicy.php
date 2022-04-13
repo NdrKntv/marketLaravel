@@ -27,6 +27,7 @@ class ProductCommentPolicy
 
     public function createComment(User $user, $product): bool
     {
-        return DB::table('comments')->where([['user_id', $user->id], ['product_id', $product->id]])->doesntExist();
+        return DB::table('comments')->where([['user_id', $user->id], ['product_id', $product->id]])->doesntExist()
+            && $user->id != $product->user->id;
     }
 }

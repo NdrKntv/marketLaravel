@@ -50,11 +50,16 @@ class User extends Authenticatable
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasManyThrough(Comment::class, Product::class);
     }
 
     public function favorites()
     {
         return $this->belongsToMany(Product::class, 'product_user')->as('favorites');
+    }
+
+    public function shopDescription()
+    {
+        return $this->hasOne(ShopDescription::class);
     }
 }

@@ -41,7 +41,7 @@
                                 {{$favorites->count()}}
                             </span>
                         </button>
-                        <ul class="dropdown-menu" style="max-height: 350px; overflow-y: scroll; left: -145px;"
+                        <ul class="dropdown-menu" style="max-height: 350px; overflow-y: scroll; left: -95px;"
                             aria-labelledby="dropdownMenuButton1">
                             @foreach($favorites as $fav)
                                 <li>
@@ -64,7 +64,7 @@
                             {{auth()->user()->name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">My profile</a></li>
+                            <li><a class="dropdown-item" href="/user{{auth()->user()->id}}">My profile</a></li>
                             <li><a class="dropdown-item" href="#">Account settings</a></li>
                             <li>
                                 <form method="POST" action="/logout">

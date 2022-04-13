@@ -11,7 +11,7 @@ import Swiper from 'swiper/bundle';
 // import styles bundle
 import 'swiper/css/bundle';
 
-// init Swiper:
+// init product images swiper:
 const swiper = new Swiper(".mySwiper", {
     spaceBetween: 10,
     slidesPerView: 4,
