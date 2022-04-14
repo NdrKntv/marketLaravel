@@ -197,18 +197,7 @@
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif
                 @foreach($comments as $comment)
-                    <div id="comment-div" class="p-2 mt-3 rounded"
-                         @switch($comment->rating)
-                         @case('dislike')
-                         style="background: #ff00005e"
-                         @break
-                         @case('like')
-                         style="background: #1bff005e"
-                         @break
-                         @default
-                         style="background: #ffff005e"
-                        @endswitch
-                    >
+                    <x-comment-color rating="{{$comment->rating}}">
                         @can('updateDelete', $comment)
                             <div class="position-absolute" style="margin-left: 150px;">
                                 <form method="post" action="/comment/{{$comment->id}}" style="width: 30px">
@@ -257,7 +246,7 @@
                             <span>Published {{$comment->created_at->diffForHumans()}}</span>
                         </div>
                         <div>{{$comment->body}}</div>
-                    </div>
+                    </x-comment-color>
                 @endforeach
             </article>
         </section>

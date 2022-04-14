@@ -19,7 +19,7 @@ Route::post('login', [SessionController::class, 'store'])->middleware('guest');
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 
 //User
-Route::get('user{user:id}', [UserController::class, 'show']);
+Route::get('user{id}', [UserController::class, 'show']);
 
 
 //Products
