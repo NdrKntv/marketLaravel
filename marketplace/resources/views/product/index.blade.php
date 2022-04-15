@@ -88,6 +88,9 @@
                         @if(request('search'))
                             <input type="hidden" name="search" value="{{request('search')}}">
                         @endif
+                        @if(request('user'))
+                            <input type="hidden" name="user" value="{{request('user')}}">
+                        @endif
                         <div class="m-auto mt-3">
                             <button class="btn btn-secondary" type="submit">Show results</button>
                         </div>
@@ -125,7 +128,9 @@
                                     src="{{asset('images/default-product.jpg')}}"
                                     class="card-img-top" alt="..."></a>
                             <div class="card-body">
-                                <h5 class="card-title">{{Str::words($product->title, 5, $end='...')}}</h5>
+                                <h5 class="card-title"
+                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%">
+                                    {{$product->title}}</h5>
                                 <p class="d-inline-block fw-bold">{{$product->price}}$</p>
                                 <span class="badge rounded-pill bg-secondary mx-2">{{$product->in_stock}}</span>
                                 @if($product->newness==0)
@@ -134,7 +139,8 @@
                                 <p class="card-text">{{Str::words($product->description, 9, $end='...')}}</p>
                                 <div class="mb-2">
                                     @foreach($product->tags as $tag)
-                                        <a href="{{request()->url().'?'.$tag->slug.'=on'}}" style="border: 1px solid #6c757d"
+                                        <a href="{{request()->url().'?'.$tag->slug.'=on'}}"
+                                           style="border: 1px solid #6c757d"
                                            class="d-inline-block px-1 rounded mb-1 text-decoration-none text-secondary">#{{$tag->title}}</a>
                                     @endforeach
                                 </div>

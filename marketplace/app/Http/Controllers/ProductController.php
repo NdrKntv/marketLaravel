@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index(Category $category)
     {
-        $allProducts = $category->products();
+        $allProducts = $category->products()->where('active', '=',1);
         $maxPrice = $allProducts->max('price');
         $minPrice = $allProducts->min('price');
         $fTags = [];
@@ -23,7 +23,7 @@ class ProductController extends Controller
 
         return view('product.index', ['category' => $category, 'categoryTags' => $categoryTags, 'prices' => [$maxPrice, $minPrice],
             'products' => Product::with('tags')->where([['category_id', $category->id], ['active', 1]])->tagFilter($fTags)
-                ->filter(request(['search', 'new', 'available', 'minPrice', 'priceLimit']))->orderType(request('sortBy'))
+                ->filter(request(['search', 'new', 'available', 'minPrice', 'priceLimit', 'user']))->orderType(request('sortBy'))
                 ->paginate(9)->withQueryString()]);
     }
 

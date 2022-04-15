@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function comments()
     {
-        return $this->hasManyThrough(Comment::class, Product::class);
+        return $this->hasManyThrough(Comment::class, Product::class)->latest()->limit(10);
     }
 
     public function favorites()

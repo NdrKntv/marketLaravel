@@ -1,6 +1,6 @@
 @props(['rating'])
 
-<div id="comment-div" class="p-2 mt-3 rounded"
+<div id="comment-div" {{$attributes->merge(['class'=>'rounded'])}}
      @switch($rating)
      @case('dislike')
      style="background: #ff00005e"

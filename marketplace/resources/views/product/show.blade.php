@@ -197,7 +197,7 @@
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif
                 @foreach($comments as $comment)
-                    <x-comment-color rating="{{$comment->rating}}">
+                    <x-comment-color rating="{{$comment->rating}}" class="p-2 mt-3">
                         @can('updateDelete', $comment)
                             <div class="position-absolute" style="margin-left: 150px;">
                                 <form method="post" action="/comment/{{$comment->id}}" style="width: 30px">
@@ -238,7 +238,7 @@
                                 <img src="{{$comment->user->avatar?:asset('images/default-avatar.png')}}"
                                      alt="user_avatar"
                                      style="height: 50px; width: 50px">
-                                <a href=""
+                                <a href="/user{{$comment->user->id}}"
                                    style="color: black; text-decoration: none; vertical-align: top">{{$comment->user->name}}</a>
                             </div>
                             <img id="rating-img" src="{{asset('images/'.$comment->rating.'.png')}}"

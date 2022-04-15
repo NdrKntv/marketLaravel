@@ -11,8 +11,6 @@ class Product extends Model
 
     protected $guarded = [];
 
-    protected $with = ['category'];
-
     public function scopeTagFilter($query, $fTags = [])
     {
         $query->when($fTags ?? false, fn($query, $fTags) => $query->whereHas('tags', fn($query) => $query->whereIn('tag_id', $fTags)));
@@ -27,6 +25,8 @@ class Product extends Model
         $query->when($filters['new'] ?? false, fn($query) => $query->where('newness', 1));
 
         $query->when($filters['available'] ?? false, fn($query) => $query->where('in_stock', 'available'));
+
+        $query->when($filters['user'] ?? false, fn($query, $userId) => $query->where('user_id', $userId));
 
         $query->when($filters['priceLimit'] ?? false, function ($query, $priceLimit) use ($filters) {
             isset($filters['minPrice']) ? $operator = '>=' : $operator = '<=';
