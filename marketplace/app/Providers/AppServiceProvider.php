@@ -29,7 +29,10 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         Gate::define('admin', function (User $user) {
-            return $user->role === 'admin';
+            return $user->role == 'admin';
+        });
+        Gate::define('currentUser', function (User $user) {
+            return $user->id == request('user') || $user->role == 'admin';
         });
     }
 }

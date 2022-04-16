@@ -17,11 +17,10 @@ Route::post('create-account', [RegisterController::class, 'store'])->middleware(
 Route::get('login', [SessionController::class, 'create'])->middleware('guest');
 Route::post('login', [SessionController::class, 'store'])->middleware('guest');
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
-
 //User
 Route::get('user{user:id}', [UserController::class, 'show']);
-
-
+Route::get('user{user:id}/edit', [UserController::class, 'edit'])->middleware('can:currentUser');
+Route::patch('user{user:id}', [UserController::class, 'update'])->middleware('can:currentUser');
 //Products
 Route::name('products')->get('{category:slug}', [ProductController::class, 'index']);
 Route::name('product')->get('{category:slug}/{product:slug}', [ProductController::class, 'show']);

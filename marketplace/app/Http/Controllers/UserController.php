@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ShopDescription;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,13 +20,29 @@ class UserController extends Controller
 
         $categories = Category::whereRelation('products', [['user_id', $id], ['active', 1]])->get(['id', 'title', 'slug']);
 
-        $products=[];
+        $products = [];
         foreach ($categories as $category) {
-            $products[$category->id]= Product::with('tags:tags.id,tags.title')
+            $products[$category->id] = Product::with('tags:tags.id,tags.title')
                 ->where([['user_id', $id], ['category_id', $category->id], ['active', 1]])
                 ->latest()->limit(5)->get(['id', 'title', 'slug', 'price', 'created_at']);
         }
 
-        return view('user.show', ['user' => $user, 'categories' => $categories, 'products'=>$products]);
+        return view('user.show', ['user' => $user, 'categories' => $categories, 'products' => $products]);
+    }
+
+    public function edit($id)
+    {
+        $user = User::where('id', $id)->get(['id', 'role', 'avatar', 'phone'])->first();
+        if ($user->role == 'shop') {
+            $description = ShopDescription::where('user_id', $id)->get(['description', 'website', 'instagram', 'facebook'])->first();
+        }
+
+        return view('user.edit', ['user' => $user, 'description' => $description ?? false]);
+    }
+
+    public function update()
+    {
+        $attributes=\request();
+        dd($attributes);
     }
 }

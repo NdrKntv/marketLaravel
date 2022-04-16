@@ -65,7 +65,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="/user{{auth()->user()->id}}">My profile</a></li>
-                            <li><a class="dropdown-item" href="#">Account settings</a></li>
+                            <li><a class="dropdown-item" href="/user{{auth()->user()->id}}/edit">Account settings</a></li>
                             <li>
                                 <form method="POST" action="/logout">
                                     @csrf
