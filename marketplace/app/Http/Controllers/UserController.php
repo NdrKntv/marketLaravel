@@ -40,9 +40,25 @@ class UserController extends Controller
         return view('user.edit', ['user' => $user, 'description' => $description ?? false]);
     }
 
-    public function update()
+    public function update($id)
     {
-        $attributes=\request();
-        dd($attributes);
+        $userAtt = request()->validate([
+            'phone' => 'min:10|max:13|nullable',
+            'avatar' => 'image|nullable'
+        ]);
+        $descriptionAtt = request()->validate([
+            'description' => 'max:1000',
+            'website' => 'url|nullable',
+            'instagram' => 'url|nullable',
+            'facebook' => 'url|nullable'
+        ]);
+
+        $user = User::firstWhere('id', $id);
+        if ($descriptionAtt) {
+            $user->description()->update($descriptionAtt, ['timestamps' => false]);
+        }
+        $user->update($userAtt);
+
+        return redirect('/user' . $user->id)->with('success', 'Edited');
     }
 }
