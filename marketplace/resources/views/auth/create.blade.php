@@ -10,12 +10,19 @@
                 <p class="text-danger">{{$message}}</p>
                 @enderror
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password"
                        name="password" placeholder="Minimum 6" required>
                 @error('password')
                 <p class="text-danger">{{$message}}</p>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm password</label>
+                <input class="form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Repeat password">
+                @error('confirmPassword')
+                <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
             <div class="mb-3">

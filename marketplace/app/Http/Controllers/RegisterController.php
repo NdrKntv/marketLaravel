@@ -20,15 +20,16 @@ class RegisterController
             'name' => 'required|max:32|min:2|unique:users,name',
             'password' => 'required|min:6'
         ]);
+        request()->validate(['confirmPassword' => 'same:password']);
 
         if (request()->has('shopCheck')) {
             $attributes['role'] = 'shop';
             DB::transaction(function () use ($attributes) {
                 try {
                     $user = User::create($attributes);
-                    DB::table('shop_descriptions')->insert(['user_id'=>$user->id]);
+                    DB::table('shop_descriptions')->insert(['user_id' => $user->id]);
                 } catch (\Exception $exception) {
-                    throw ValidationException::withMessages(['name'=>'Something goes wrong, try again later =(']);
+                    throw ValidationException::withMessages(['name' => 'Something goes wrong, try again later =(']);
                 }
             });
         } else {

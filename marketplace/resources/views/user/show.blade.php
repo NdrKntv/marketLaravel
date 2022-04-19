@@ -7,7 +7,8 @@
                     <img src="{{$user->role=='human'?asset('images/user-icon.png'):asset('images/store-icon.png')}}"
                          alt="icon" style="width: 10%">
                 </div>
-                <img src="{{$user->avatar?:asset('images/default-avatar.png')}}" alt="avatar" class="rounded mt-3">
+                <img src="{{asset($user->avatar?'storage/'.$user->avatar:'images/default-avatar.png')}}"
+                     alt="avatar" class="rounded mt-3" style="max-width: 255px">
                 <p class="text-secondary mt-2">Registered {{$user->created_at->diffForHumans()}}</p>
                 @if($user->phone)
                     <p class="fw-bold fs-5">Phone: {{$user->phone}}</p>
@@ -75,12 +76,14 @@
                                                                     <span>#{{$tag->title}}</span>
                                                                 @endforeach
                                                             </div>
-                                                            <div class="align-self-end">{{$product->created_at->diffForHumans()}}</div>
+                                                            <div
+                                                                class="align-self-end">{{$product->created_at->diffForHumans()}}</div>
                                                         </a>
                                                     </div>
                                                 @endforeach
                                             </div>
-                                            <a href="/{{$category->slug}}?user={{$user->id}}">View all users {{$category->title}}</a>
+                                            <a href="/{{$category->slug}}?user={{$user->id}}">View all
+                                                users {{$category->title}}</a>
                                         </div>
                                     </div>
                                 </div>

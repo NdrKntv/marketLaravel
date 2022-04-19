@@ -29,6 +29,6 @@ class SessionController
     {
         auth()->logout();
 
-        return redirect(request('redirectLink')??'/')->with('success', 'Goodbye');
+        return redirect('/')->with('success', 'Goodbye');
     }
 }

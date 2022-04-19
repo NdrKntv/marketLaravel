@@ -1,9 +1,16 @@
 <x-Layout>
     <section class="container w-50">
         <h4>Edit profile</h4>
-        <form method="POST" action="/user{{$user->id}}" class=" container w-75">
+        <form method="POST" action="/user{{$user->id}}" class="container w-75" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
+            <div class="mt-3">
+                <label for="name" class="form-label">Name</label>
+                <input class="form-control" type="text" name="name" id="name" value="{{old('name', $user->name)}}">
+                @error('name')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
             <div class="mt-3">
                 <label for="phone" class="form-label">Phone</label>
                 <input class="form-control" type="text" name="phone" id="phone" value="{{old('phone', $user->phone)}}"
@@ -13,9 +20,24 @@
                 @enderror
             </div>
             <div class="mt-3">
+                <label for="password" class="form-label">Password</label>
+                <input class="form-control" type="password" name="password" id="password"
+                       placeholder="Set new password">
+                @error('password')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mt-1">
+                <label for="confirmNewPassword" class="form-label">Confirm new password</label>
+                <input class="form-control" type="password" name="confirmNewPassword" id="confirmNewPassword"
+                       placeholder="Repeat new password">
+                @error('confirmNewPassword')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
                 <label for="avatar" class="form-label">Avatar</label>
-                <input class="form-control" id="avatar" type="file" name="avatar"
-                       value="{{old('avatar', $user->avatar)}}">
+                <input class="form-control" id="avatar" type="file" name="avatar">
                 @error('avatar')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
@@ -59,6 +81,14 @@
                     @enderror
                 </div>
             @endif
+            <div class="mt-3">
+                <label for="passwordCheck" class="form-label fw-bold">You must enter the current password</label>
+                <input class="form-control" type="password" name="passwordCheck" id="passwordCheck"
+                       placeholder="Current password">
+                @error('passwordCheck')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
             <button type="submit" class="mt-3 btn-secondary btn">Edit changes</button>
         </form>
     </section>

@@ -19,7 +19,7 @@
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;">
             @foreach($categories as $category)
-                <a class="dropdown-item" href="/{{$category->slug}}"
+                <a class="dropdown-item" href="/{{$category->slug}}/products"
                    style="{{isset($currentCategory)&&$currentCategory->id==$category->id?'background: #6c757d':''}}"
                 >{{$category->title}}</a>
             @endforeach
