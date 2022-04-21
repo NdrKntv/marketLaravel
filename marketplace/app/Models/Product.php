@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['rating'];
 
     public function scopeTagFilter($query, $fTags = [])
     {
@@ -59,7 +59,8 @@ class Product extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class)->select(['id', 'slug', 'title']);
+//        return $this->belongsToMany(Tag::class)->get(['id', 'slug', 'title']);
     }
 
     public function comments()

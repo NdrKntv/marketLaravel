@@ -8,7 +8,7 @@ class Layout extends Component
 {
     public function render()
     {
-        if (auth()->user()) {
+        if (auth()->check()) {
             return view('components.layout', ['favorites' => auth()->user()->favorites]);
         }
         return view('components.layout');

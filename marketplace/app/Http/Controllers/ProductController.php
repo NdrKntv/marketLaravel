@@ -8,29 +8,32 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function index(Category $category)
+    public function index($cSlug)
     {
-        $activeToggle = fn() => (request('user') == auth()->user()->id && request('inactive')) ?[]: ['active', '=', 1];
+        $category = Category::where('slug', $cSlug)->select(['id', 'title', 'slug'])->first();
+        $categoryTags = $category->tags();
 
-//        dd($activeToggle);
-        $allProducts = $category->products()->where($activeToggle());
-        $maxPrice = $allProducts->max('price');
-        $minPrice = $allProducts->min('price');
+        $activeToggle = fn() => (request('user') == auth()->id() && request('inactive')) ? ['active', '<', 3] : ['active', '=', 1];
+
         $fTags = [];
-        $categoryTags = $category->tags()->get();
         foreach ($categoryTags as $t) {
             if (request($t->slug)) {
                 $fTags[] = $t->id;
             }
         }
 
+        $products = Product::with('tags')->where([['category_id', $category->id], $activeToggle()])->tagFilter($fTags)
+            ->filter(request(['search', 'new', 'available', 'user']));
+
+        $maxPrice = $products->max('price');
+        $minPrice = $products->min('price');
+
         return view('product.index', ['category' => $category, 'categoryTags' => $categoryTags, 'prices' => [$maxPrice, $minPrice],
-            'products' => Product::with('tags')->where([['category_id', $category->id], $activeToggle()])->tagFilter($fTags)
-                ->filter(request(['search', 'new', 'available', 'minPrice', 'priceLimit', 'user']))->orderType(request('sortBy'))
+            'products' => $products->filter(request(['minPrice', 'priceLimit']))->orderType(request('sortBy'))
                 ->paginate(9)->withQueryString()]);
     }
 
-    public function show(Category $category, Product $product)
+    public function show($cSlug, Product $product)
     {
         return view('product.show', ['product' => $product,
             'comments' => $product->comments()->latest()->with('user')->get()]);

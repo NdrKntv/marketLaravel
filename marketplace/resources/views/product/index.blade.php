@@ -102,14 +102,14 @@
                     <div class="w-100 mb-2 d-flex justify-content-center">
                     <div class="p-1 rounded d-flex gap-5" style="border: 1px dashed #6c757d;">
                         <a href="products/create" class="btn btn-secondary">Add product <b>+</b></a>
-                        <a href="?myProducts=" class="btn btn-secondary">My ALL products</a>
+                        <a href="?user={{auth()->id()}}&inactive=1" class="btn btn-secondary">My ALL products</a>
                         <a href="?user={{auth()->id()}}" class="btn btn-secondary">My ACTIVE products</a>
                     </div>
                     </div>
                 @endauth
                 @if($products->count())
                     @foreach($products as $product)
-                        <div class="card mb-3" style="width: 16rem;">
+                        <div class="card mb-3" style="width: 16rem; {{$product->active==1?:'background: #dd6470d4'}}">
                             @can('updateDelete', $product)
                                 <div class="position-absolute">
                                     <form method="post" action="/product/{{$product->id}}" style="width: 30px">
@@ -130,6 +130,11 @@
                                             </div>
                                         </form>
                                     </div>
+                                    <form method="post" action="/product/{{$product->id}}" style="width: 30px">
+                                        @csrf
+                                        @method('put')
+                                        <button type="submit" class="bg-warning">A/</button>
+                                    </form>
                                 </div>
                             @endcan
                             <a href="{{$product->slug}}"><img
@@ -143,6 +148,9 @@
                                 <span class="badge rounded-pill bg-secondary mx-2">{{$product->in_stock}}</span>
                                 @if($product->newness==0)
                                     <span class="badge rounded-pill bg-secondary">Used</span>
+                                @endif
+                                @if($product->active==0)
+                                    <span class="badge rounded-pill bg-danger">Inactive</span>
                                 @endif
                                 <p class="card-text">{{Str::words($product->description, 9, $end='...')}}</p>
                                 <div class="mb-2">
