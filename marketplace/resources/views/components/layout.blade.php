@@ -41,13 +41,14 @@
                                 {{$favorites->count()}}
                             </span>
                         </button>
-                        <ul class="dropdown-menu" style="max-height: 350px; overflow-y: scroll"
+                        <ul class="dropdown-menu" style="max-height: 350px; width: 250px; overflow-y: scroll"
                             aria-labelledby="dropdownMenuButton1">
                             @foreach($favorites as $fav)
                                 <li>
                                     <a class="dropdown-item {{request()->is($fav->category->slug.'/'.$fav->slug)?'bg-secondary text-white':''}}"
                                        href="/{{$fav->category->slug.'/'.$fav->slug}}">
-                                        <span>{{Str::words($fav->title, 3, $end='...')}}</span>
+                                        <h5 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%"
+                                        >{{$fav->title}}</h5>
                                         <div>
                                             <span class="fw-bold">{{$fav->price}}$</span>
                                             <span>{{$fav->in_stock}}</span>

@@ -11,7 +11,15 @@ class Category extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class)
+            ->select('id', 'title', 'price', 'description', 'slug', 'in_stock', 'newness', 'rating', 'active', 'created_at');
+    }
+
+    public function userProfileProducts($id)
+    {
+        return $this->hasMany(Product::class)->with('tags:tags.id,tags.title')
+            ->where([['user_id', $id], ['active', 1]])->latest()->limit(5)
+            ->get(['id', 'title', 'slug', 'price', 'created_at']);
     }
 
     public function tags()

@@ -6,7 +6,6 @@ use App\Models\Comment;
 use App\Models\Product;
 use App\Policies\ProductCommentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {

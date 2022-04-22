@@ -10,6 +10,6 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return view('home', ['categories' => Category::all()]);
+        return view('home', ['categories' => Category::get(['slug', 'title', 'description', 'image'])]);
     }
 }

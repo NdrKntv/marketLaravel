@@ -11,8 +11,13 @@ class Product extends Model
 
     protected $guarded = ['rating'];
 
-    public function scopeTagFilter($query, $fTags = [])
+    public function scopeTagFilter($query, $categoryTags)
     {
+        foreach ($categoryTags as $t) {
+            if (request($t->slug)) {
+                $fTags[] = $t->id;
+            }
+        }
         $query->when($fTags ?? false, fn($query, $fTags) => $query->whereHas('tags', fn($query) => $query->whereIn('tag_id', $fTags)));
     }
 
@@ -44,12 +49,12 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->select('id', 'slug', 'title');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select('id', 'name');
     }
 
     public function images()
@@ -60,11 +65,11 @@ class Product extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class)->select(['id', 'slug', 'title']);
-//        return $this->belongsToMany(Tag::class)->get(['id', 'slug', 'title']);
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->select('id', 'user_id', 'rating', 'body', 'created_at')
+            ->with('user')->latest();
     }
 }

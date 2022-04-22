@@ -1,7 +1,7 @@
 <x-Layout>
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">
-            {{Breadcrumbs::render('categories', $category)}}
+            {{Breadcrumbs::render('products', $category)}}
         </div>
         <div class="row justify-content-center">
             <article class="col-3 p-3">
@@ -100,11 +100,11 @@
             <article class="col-9 d-flex flex-wrap justify-content-evenly start-0">
                 @auth()
                     <div class="w-100 mb-2 d-flex justify-content-center">
-                    <div class="p-1 rounded d-flex gap-5" style="border: 1px dashed #6c757d;">
-                        <a href="products/create" class="btn btn-secondary">Add product <b>+</b></a>
-                        <a href="?user={{auth()->id()}}&inactive=1" class="btn btn-secondary">My ALL products</a>
-                        <a href="?user={{auth()->id()}}" class="btn btn-secondary">My ACTIVE products</a>
-                    </div>
+                        <div class="p-1 rounded d-flex gap-5" style="border: 1px dashed #6c757d;">
+                            <a href="products/create" class="btn btn-secondary">Add product <b>+</b></a>
+                            <a href="?user={{auth()->id()}}&inactive=1" class="btn btn-secondary">My ALL products</a>
+                            <a href="?user={{auth()->id()}}" class="btn btn-secondary">My ACTIVE products</a>
+                        </div>
                     </div>
                 @endauth
                 @if($products->count())

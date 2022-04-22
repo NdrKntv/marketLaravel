@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\ShopDescription;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -14,19 +11,13 @@ class UserController extends Controller
 {
     public function show($id)
     {
-        $user = User::with('comments:comments.rating,comments.product_id,comments.created_at',
-            'comments.product:products.id,products.category_id,products.title,products.slug',
-            'comments.product.category:categories.id,categories.slug',
-            'description:shop_descriptions.user_id,shop_descriptions.description,shop_descriptions.website,shop_descriptions.instagram,shop_descriptions.facebook')
-            ->where('id', $id)->get(['id', 'role', 'name', 'avatar', 'created_at', 'phone'])->first();
+        $user = User::where('id', $id)->get(['id', 'role', 'name', 'avatar', 'created_at', 'phone'])->first();
 
         $categories = Category::whereRelation('products', [['user_id', $id], ['active', 1]])->get(['id', 'title', 'slug']);
 
         $products = [];
         foreach ($categories as $category) {
-            $products[$category->id] = Product::with('tags:tags.id,tags.title')
-                ->where([['user_id', $id], ['category_id', $category->id], ['active', 1]])
-                ->latest()->limit(5)->get(['id', 'title', 'slug', 'price', 'created_at']);
+            $products[$category->id] = $category->userProfileProducts($id);
         }
 
         return view('user.show', ['user' => $user, 'categories' => $categories, 'products' => $products]);
@@ -36,7 +27,7 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->get(['id', 'role', 'name', 'avatar', 'phone'])->first();
         if ($user->role == 'shop') {
-            $description = ShopDescription::where('user_id', $id)->get(['description', 'website', 'instagram', 'facebook'])->first();
+            $description = $user->description;
         }
 
         return view('user.edit', ['user' => $user, 'description' => $description ?? false]);

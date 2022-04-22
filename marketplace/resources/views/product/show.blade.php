@@ -193,10 +193,10 @@
                         </form>
                     @endcan
                 @endguest
-                @if($comments->count()==0)
+                @if($product->comments->count()==0)
                     <div style="font-size: 25px; font-weight: bold">No comments yet =(</div>
                 @endif
-                @foreach($comments as $comment)
+                @foreach($product->comments as $comment)
                     <x-comment-color rating="{{$comment->rating}}" class="p-2 mt-3">
                         @can('updateDelete', $comment)
                             <div class="position-absolute" style="margin-left: 150px;">

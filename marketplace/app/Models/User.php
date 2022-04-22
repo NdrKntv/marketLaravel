@@ -50,16 +50,20 @@ class User extends Authenticatable
 
     public function comments()
     {
-        return $this->hasManyThrough(Comment::class, Product::class)->latest()->limit(10);
+        return $this->hasManyThrough(Comment::class, Product::class)
+            ->select('comments.rating', 'comments.product_id', 'comments.created_at')
+            ->with('product')->latest()->limit(10);
     }
 
     public function favorites()
     {
-        return $this->belongsToMany(Product::class, 'product_user')->as('favorites');
+        return $this->belongsToMany(Product::class, 'product_user')
+            ->with('category:categories.id,categories.slug,categories.title')
+            ->select('id', 'category_id', 'title', 'slug', 'price', 'in_stock');
     }
 
     public function description()
     {
-        return $this->hasOne(ShopDescription::class);
+        return $this->hasOne(ShopDescription::class)->select('description', 'website', 'instagram', 'facebook');
     }
 }

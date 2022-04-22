@@ -15,14 +15,7 @@ class ProductController extends Controller
 
         $activeToggle = fn() => (request('user') == auth()->id() && request('inactive')) ? ['active', '<', 3] : ['active', '=', 1];
 
-        $fTags = [];
-        foreach ($categoryTags as $t) {
-            if (request($t->slug)) {
-                $fTags[] = $t->id;
-            }
-        }
-
-        $products = Product::with('tags')->where([['category_id', $category->id], $activeToggle()])->tagFilter($fTags)
+        $products = $category->products()->with('tags')->where([$activeToggle()])->tagFilter($categoryTags)
             ->filter(request(['search', 'new', 'available', 'user']));
 
         $maxPrice = $products->max('price');
@@ -33,10 +26,13 @@ class ProductController extends Controller
                 ->paginate(9)->withQueryString()]);
     }
 
-    public function show($cSlug, Product $product)
+    public function show($cSlug, $pSlug)
     {
-        return view('product.show', ['product' => $product,
-            'comments' => $product->comments()->latest()->with('user')->get()]);
+        $product = Product::where('slug', $pSlug)
+            ->get(['id', 'category_id', 'user_id', 'slug', 'title', 'price', 'description', 'in_stock', 'newness', 'created_at'])
+            ->first();
+
+        return view('product.show', ['product' => $product]);
     }
 
     public function create($slug)

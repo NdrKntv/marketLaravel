@@ -9,7 +9,8 @@ class CategoryDropdown extends Component
 {
     public function render()
     {
-        return view('components.category-dropdown', ['categories' => Category::all(),
-            'currentCategory' =>Category::firstWhere('slug', request()->segment(1))]);
+        $categories = Category::all('title', 'slug');
+        $currentCategory = $categories->firstWhere('slug', request()->segment(1));
+        return view('components.category-dropdown', ['categories' => $categories, 'currentCategory' => $currentCategory]);
     }
 }
