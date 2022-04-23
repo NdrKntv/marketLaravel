@@ -235,9 +235,10 @@
                         @endcan
                         <div class="d-flex justify-content-between">
                             <div>
-                                <img src="{{asset($comment->user->avatar?'storage/'.$comment->user->avatar:'images/default-avatar.png')}}"
-                                     alt="user_avatar"
-                                     style="height: 50px; width: 50px;">
+                                <img
+                                    src="{{asset($comment->user->avatar?'storage/'.$comment->user->avatar:'images/default-avatar.png')}}"
+                                    alt="user_avatar"
+                                    style="height: 50px; width: 50px;">
                                 <a href="/user{{$comment->user->id}}"
                                    style="color: black; text-decoration: none; vertical-align: top">{{$comment->user->name}}</a>
                             </div>

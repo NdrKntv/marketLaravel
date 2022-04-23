@@ -12,7 +12,7 @@ class Category extends Model
     public function products()
     {
         return $this->hasMany(Product::class)
-            ->select('id', 'title', 'price', 'description', 'slug', 'in_stock', 'newness', 'rating', 'active', 'created_at');
+            ->select('id', 'user_id', 'title', 'price', 'description', 'slug', 'in_stock', 'newness', 'rating', 'active', 'created_at');
     }
 
     public function userProfileProducts($id)

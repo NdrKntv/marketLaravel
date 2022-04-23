@@ -11,6 +11,11 @@ class Product extends Model
 
     protected $guarded = ['rating'];
 
+    public function setSlugAttribute()
+    {
+        $this->attributes['slug'] = slugGenerator($this->title, $this);
+    }
+
     public function scopeTagFilter($query, $categoryTags)
     {
         foreach ($categoryTags as $t) {

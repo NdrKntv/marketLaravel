@@ -47,7 +47,7 @@ class UserController extends Controller
             'name' => ['required', 'max:32', 'min:2', Rule::unique('users', 'name')->ignore($id)]
         ]);
         !request('password') ?: $userAtt['password'] = request('password');
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         (!request()->hasFile('avatar')) ?: $userAtt['avatar'] = request()->file('avatar')->store('avatar');
         if (request('deleteAvatar')) {
             $userAtt['avatar'] = null;
@@ -62,7 +62,7 @@ class UserController extends Controller
         ]);
 
         if ($descriptionAtt) {
-            $user->description()->update($descriptionAtt, ['timestamps' => false]);
+            $user->description()->update($descriptionAtt);
         }
         $user->update($userAtt);
 

@@ -1,18 +1,20 @@
 <x-Layout>
     <section class="container w-50">
-        <h4>Add new product</h4>
-        <form method="POST" action="/products" enctype="multipart/form-data">
+        <h4>Add new product in {{$category->title}} category</h4>
+        <form method="POST" action="/{{$category->slug}}/products" enctype="multipart/form-data">
             @csrf
             <div class="mt-3 w-50">
                 <label for="title" class="form-label">Title</label>
-                <input class="form-control" type="text" name="title" id="title" value="{{old('title')}}" placeholder="Product title">
+                <input class="form-control" type="text" name="title" id="title" value="{{old('title')}}"
+                       placeholder="Product title">
                 @error('title')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
             <div class="mt-3 w-25">
                 <label for="price" class="form-label">Price $</label>
-                <input class="form-control" type="number" name="price" id="price" value="{{old('price')}}" placeholder="$">
+                <input class="form-control" type="number" name="price" id="price" value="{{old('price')}}"
+                       placeholder="$">
                 @error('price')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
@@ -26,9 +28,25 @@
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
+            <div class="mt-3 w-75 d-flex flex-wrap gap-2">
+                <div class="w-100">You can select up to 4 tags</div>
+                @foreach($tags as $tag)
+                    <div class="px-1 rounded" style="border: 1px solid #6c757d">
+                        <input type="checkbox" name="tags[]" value="{{$tag->id}}" id="{{$tag->id}}"
+                            {{!in_array($tag->id, old('tags')??array())?:'checked'}}>
+                        <label for="{{$tag->id}}">#{{$tag->title}}</label>
+                    </div>
+                @endforeach
+                @error('tags')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
             <div class="mt-3">
                 <label for="image" class="form-label">Images (max: 7)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
+                @error('image')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
             </div>
             <div class="mt-3">
                 <label for="in_stock" class="form-label">Product availability</label>
@@ -40,12 +58,13 @@
             </div>
             <div class="mt-1">
                 <label for="used" class="form-label">Used</label>
-                <input type="checkbox" name="used" id="used">
+                <input type="checkbox" name="newness" id="used" value="0" {{!old('used')?:'checked'}}>
             </div>
             <div class="mt-2">
                 <label for="inactive" class="form-label">Inactive</label>
-                <input type="checkbox" name="inactive" id="inactive">
+                <input type="checkbox" name="active" id="inactive" value="0" {{!old('inactive')?:'checked'}}>
             </div>
+            <input type="hidden" name="category" value="{{$category->id}}">
             <button type="submit" class="mt-3 btn-secondary btn">Create new product</button>
         </form>
     </section>

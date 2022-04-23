@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 
 class ProductController extends Controller
@@ -35,14 +37,46 @@ class ProductController extends Controller
         return view('product.show', ['product' => $product]);
     }
 
-    public function create($slug)
+    public function create($cSlug)
     {
-        return view('product.create');
+        $category = Category::where('slug', $cSlug)->select(['id', 'slug', 'title'])->first();
+        $tags = $category->tags();
+        return view('product.create', ['category' => $category, 'tags' => $tags]);
     }
 
     public function store()
     {
+        request()->validate([
+            'tags' => 'array|nullable|max:4',
+            'tags.*' => 'integer|nullable|distinct',
+            'image' => 'array|nullable|max:7',
+            'image.*' => 'image|nullable|distinct'
+        ]);
+        $productAttributes = request()->validate([
+            'title' => 'string|required|max:50',
+            'price' => 'integer|required',
+            'description' => 'string|required|max:1500',
+            'in_stock' => 'string',
+            'newness' => 'int|nullable',
+            'active' => 'int|nullable'
+        ]);
+        $productAttributes += ['user_id' => auth()->id(), 'category_id' => request('category'), 'slug'=>''];
 
+        DB::transaction(function () use ($productAttributes) {
+            try {
+                $product = Product::create($productAttributes);
+                foreach (request()->file('image')??array() as $k=>$image){
+                    $imagePath=$image->store('productImages/'.$product->id);
+                    $product->images()->create(['main_image'=>$k==0?:0, 'image_name'=>$imagePath]);
+                }
+                $product->tags()->sync(request('tags'));
+            } catch (\Exception $exception) {
+                throw ValidationException::withMessages(['title'=>'Something goes wrong, try again later =(']);
+//                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
+            }
+        });
+
+        return redirect('/')->with('success', 'Product stored');
     }
 
     public function edit()
