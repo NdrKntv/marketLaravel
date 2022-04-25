@@ -137,8 +137,8 @@
                                     </form>
                                 </div>
                             @endcan
-                            <a href="{{$product->slug}}"><img
-                                    src="{{asset('images/default-product.jpg')}}"
+                            <a href="/{{'products/'.$product->slug}}"><img
+                                    src="{{asset(isset($product->image->image_name)?'storage/'.$product->image->image_name:'images/default-product.jpg')}}"
                                     class="card-img-top" alt="..."></a>
                             <div class="card-body">
                                 <h5 class="card-title"
@@ -161,7 +161,7 @@
                                     @endforeach
                                 </div>
                                 <div>
-                                    <a href="{{$product->slug}}" class="btn btn-secondary">More
+                                    <a href="/{{'products/'.$product->slug}}" class="btn btn-secondary">More
                                         details</a>
                                     @auth
                                         @if(auth()->user()->favorites->contains($product->id))

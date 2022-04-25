@@ -17,7 +17,7 @@ class ProductController extends Controller
 
         $activeToggle = fn() => (request('user') == auth()->id() && request('inactive')) ? ['active', '<', 3] : ['active', '=', 1];
 
-        $products = $category->products()->with('tags')->where([$activeToggle()])->tagFilter($categoryTags)
+        $products = $category->products()->with('tags', 'image')->where([$activeToggle()])->tagFilter($categoryTags)
             ->filter(request(['search', 'new', 'available', 'user']));
 
         $maxPrice = $products->max('price');
@@ -28,11 +28,11 @@ class ProductController extends Controller
                 ->paginate(9)->withQueryString()]);
     }
 
-    public function show($cSlug, $pSlug)
+    public function show($pSlug)
     {
         $product = Product::where('slug', $pSlug)
             ->get(['id', 'category_id', 'user_id', 'slug', 'title', 'price', 'description', 'in_stock', 'newness', 'created_at'])
-            ->first();
+            ->firstOrFail();
 
         return view('product.show', ['product' => $product]);
     }
@@ -60,23 +60,23 @@ class ProductController extends Controller
             'newness' => 'int|nullable',
             'active' => 'int|nullable'
         ]);
-        $productAttributes += ['user_id' => auth()->id(), 'category_id' => request('category'), 'slug'=>''];
+        $productAttributes += ['user_id' => auth()->id(), 'category_id' => request('category_id'), 'slug' => ''];
 
         DB::transaction(function () use ($productAttributes) {
             try {
                 $product = Product::create($productAttributes);
-                foreach (request()->file('image')??array() as $k=>$image){
-                    $imagePath=$image->store('productImages/'.$product->id);
-                    $product->images()->create(['main_image'=>$k==0?:0, 'image_name'=>$imagePath]);
+                foreach (request()->file('image') ?? array() as $k => $image) {
+                    $imagePath = $image->store('productImages/' . $product->id);
+                    $product->images()->create(['main_image' => $k == 0 ?: 0, 'image_name' => $imagePath]);
                 }
                 $product->tags()->sync(request('tags'));
             } catch (\Exception $exception) {
-                throw ValidationException::withMessages(['title'=>'Something goes wrong, try again later =(']);
+                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
 //                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
         });
 
-        return redirect('/')->with('success', 'Product stored');
+        return redirect('/' . request('category_slug') . '/products')->with('success', 'Product stored');
     }
 
     public function edit()

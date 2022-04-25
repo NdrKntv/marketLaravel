@@ -6,7 +6,7 @@
             <div class="mt-3 w-50">
                 <label for="title" class="form-label">Title</label>
                 <input class="form-control" type="text" name="title" id="title" value="{{old('title')}}"
-                       placeholder="Product title">
+                       placeholder="Product title" required>
                 @error('title')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
@@ -14,7 +14,7 @@
             <div class="mt-3 w-25">
                 <label for="price" class="form-label">Price $</label>
                 <input class="form-control" type="number" name="price" id="price" value="{{old('price')}}"
-                       placeholder="$">
+                       placeholder="$" required>
                 @error('price')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
@@ -22,7 +22,7 @@
             <div class="mt-3 w-75">
                 <label for="description" class="form-label">Description</label>
                 <textarea class="form-control" name="description" id="description" rows="3"
-                          placeholder="Product description"
+                          placeholder="Product description" required
                 >{{old('description')}}</textarea>
                 @error('description')
                 <p class="text-danger">{{ $message }}</p>
@@ -64,7 +64,8 @@
                 <label for="inactive" class="form-label">Inactive</label>
                 <input type="checkbox" name="active" id="inactive" value="0" {{!old('inactive')?:'checked'}}>
             </div>
-            <input type="hidden" name="category" value="{{$category->id}}">
+            <input type="hidden" name="category_id" value="{{$category->id}}">
+            <input type="hidden" name="category_slug" value="{{$category->slug}}">
             <button type="submit" class="mt-3 btn-secondary btn">Create new product</button>
         </form>
     </section>

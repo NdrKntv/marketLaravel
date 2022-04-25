@@ -23,9 +23,10 @@ Route::get('user{user:id}/edit', [UserController::class, 'edit'])->middleware('c
 Route::patch('user{user:id}', [UserController::class, 'update'])->middleware('can:currentUser');
 //Products
 Route::name('products')->get('{category:slug}/products', [ProductController::class, 'index']);
-Route::name('product')->get('{category:slug}/{product:slug}', [ProductController::class, 'show']);
 Route::get('{category:slug}/products/create', [ProductController::class, 'create'])->middleware('auth');
 Route::post('{category:slug}/products', [ProductController::class, 'store'])->middleware('auth');
+Route::name('product')->get('products/{product:slug}', [ProductController::class, 'show']);
+
 
 //Comments
 Route::post('{product:id}/comment', [CommentController::class, 'store'])->middleware('auth');

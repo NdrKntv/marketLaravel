@@ -5,116 +5,108 @@
         </div>
         <section class="row justify-content-evenly">
             <div class="col-5">
-                <style>
-                    .swiper {
-                        width: 100%;
-                        height: 100%;
-                    }
+                @if($product->images->count())
+                    <style>
+                        .swiper {
+                            width: 100%;
+                            height: 100%;
+                        }
 
-                    .swiper-slide {
-                        text-align: center;
-                        font-size: 18px;
-                        background: #fff;
+                        .swiper-slide {
+                            text-align: center;
+                            font-size: 18px;
+                            background: #fff;
 
-                        /* Center slide text vertically */
-                        display: -webkit-box;
-                        display: -ms-flexbox;
-                        display: -webkit-flex;
-                        display: flex;
-                        -webkit-box-pack: center;
-                        -ms-flex-pack: center;
-                        -webkit-justify-content: center;
-                        justify-content: center;
-                        -webkit-box-align: center;
-                        -ms-flex-align: center;
-                        -webkit-align-items: center;
-                        align-items: center;
-                    }
+                            /* Center slide text vertically */
+                            display: -webkit-box;
+                            display: -ms-flexbox;
+                            display: -webkit-flex;
+                            display: flex;
+                            -webkit-box-pack: center;
+                            -ms-flex-pack: center;
+                            -webkit-justify-content: center;
+                            justify-content: center;
+                            -webkit-box-align: center;
+                            -ms-flex-align: center;
+                            -webkit-align-items: center;
+                            align-items: center;
+                        }
 
-                    .swiper-slide img {
-                        display: block;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
+                        .swiper-slide img {
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
 
-                    .swiper {
-                        width: 100%;
-                        height: 300px;
-                        margin-left: auto;
-                        margin-right: auto;
-                    }
+                        .swiper {
+                            width: 100%;
+                            height: 300px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        }
 
-                    .swiper-slide {
-                        background-size: cover;
-                        background-position: center;
-                    }
+                        .swiper-slide {
+                            background-size: cover;
+                            background-position: center;
+                        }
 
-                    .mySwiper2 {
-                        height: 80%;
-                        width: 100%;
-                    }
+                        .mySwiper2 {
+                            height: 80%;
+                            width: 100%;
+                        }
 
-                    .mySwiper {
-                        height: 20%;
-                        box-sizing: border-box;
-                        padding: 10px 0;
-                    }
+                        .mySwiper {
+                            height: 20%;
+                            box-sizing: border-box;
+                            padding: 10px 0;
+                        }
 
-                    .mySwiper .swiper-slide {
-                        width: 25%;
-                        height: 100%;
-                        opacity: 0.4;
-                    }
+                        .mySwiper .swiper-slide {
+                            width: 25%;
+                            height: 100%;
+                            opacity: 0.4;
+                        }
 
-                    .mySwiper .swiper-slide-thumb-active {
-                        opacity: 1;
-                    }
+                        .mySwiper .swiper-slide-thumb-active {
+                            opacity: 1;
+                        }
 
-                    .swiper-slide img {
-                        display: block;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-                </style>
-                <div
-                    style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
-                    class="swiper mySwiper2"
-                >
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-1.jpg"/>
+                        .swiper-slide img {
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    </style>
+                    <div
+                        style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
+                        class="swiper mySwiper2"
+                    >
+                        <div class="swiper-wrapper">
+                            @foreach($product->images as $image)
+                                <div class="swiper-slide">
+                                    <img src="{{asset('storage/'.$image->image_name)}}"/>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-2.jpg"/>
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-3.jpg"/>
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-4.jpg"/>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    <div thumbsSlider="" class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            @foreach($product->images as $image)
+                                <div class="swiper-slide">
+                                    <img src="{{asset('storage/'.$image->image_name)}}"/>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-                <div thumbsSlider="" class="swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-1.jpg"/>
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-2.jpg"/>
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-3.jpg"/>
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://swiperjs.com/demos/images/nature-4.jpg"/>
-                        </div>
+                @else
+                    <div>
+                        <img src="{{asset('images/default-product.jpg')}}" alt="product image" class="w-75">
                     </div>
-                </div>
+                @endif
             </div>
             <div class="col-6">
                 <h1>{{$product->title}}</h1>

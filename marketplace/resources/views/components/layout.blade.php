@@ -45,8 +45,8 @@
                             aria-labelledby="dropdownMenuButton1">
                             @foreach($favorites as $fav)
                                 <li>
-                                    <a class="dropdown-item {{request()->is($fav->category->slug.'/'.$fav->slug)?'bg-secondary text-white':''}}"
-                                       href="/{{$fav->category->slug.'/'.$fav->slug}}">
+                                    <a class="dropdown-item {{request()->is('products/'.$fav->slug)?'bg-secondary text-white':''}}"
+                                       href="/{{'products/'.$fav->slug}}">
                                         <h5 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%"
                                         >{{$fav->title}}</h5>
                                         <div>

@@ -64,12 +64,19 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Image::class)->orderByDesc('main_image')
+            ->select('product_id', 'main_image', 'image_name');
+    }
+
+    public function image()
+    {
+        return $this->hasOne(Image::class)->where('main_image', '=', 1)
+            ->select('product_id', 'image_name');
     }
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class)->select(['id', 'slug', 'title']);
+        return $this->belongsToMany(Tag::class)->select('id', 'slug', 'title');
     }
 
     public function comments()

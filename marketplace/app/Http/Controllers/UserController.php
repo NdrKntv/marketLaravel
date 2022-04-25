@@ -47,8 +47,11 @@ class UserController extends Controller
             'name' => ['required', 'max:32', 'min:2', Rule::unique('users', 'name')->ignore($id)]
         ]);
         !request('password') ?: $userAtt['password'] = request('password');
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        (!request()->hasFile('avatar')) ?: $userAtt['avatar'] = request()->file('avatar')->store('avatar');
+
+        if(request()->hasFile('avatar')){
+            $userAtt['avatar'] = request()->file('avatar')->store('avatar');
+            Storage::delete($user->getOriginal('avatar'));
+        }
         if (request('deleteAvatar')) {
             $userAtt['avatar'] = null;
             Storage::delete($user->avatar);
