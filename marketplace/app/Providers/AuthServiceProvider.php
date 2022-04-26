@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use App\Models\Comment;
 use App\Models\Product;
-use App\Policies\ProductCommentPolicy;
+use App\Models\User;
+use App\Policies\CUDPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,8 +16,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Comment::class => ProductCommentPolicy::class,
-        Product::class => ProductCommentPolicy::class
+        Comment::class => CUDPolicy::class,
+        User::class => CUDPolicy::class,
+        Product::class => CUDPolicy::class
     ];
 
     /**

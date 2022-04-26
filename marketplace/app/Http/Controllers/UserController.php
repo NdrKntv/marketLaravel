@@ -23,9 +23,10 @@ class UserController extends Controller
         return view('user.show', ['user' => $user, 'categories' => $categories, 'products' => $products]);
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::where('id', $id)->get(['id', 'role', 'name', 'avatar', 'phone'])->first();
+        $this->authorize('updateDelete', $user);
+
         if ($user->role == 'shop') {
             $description = $user->description;
         }
@@ -33,9 +34,10 @@ class UserController extends Controller
         return view('user.edit', ['user' => $user, 'description' => $description ?? false]);
     }
 
-    public function update($id)
+    public function update(User $user)
     {
-        $user = User::firstWhere('id', $id);
+        $this->authorize('updateDelete', $user);
+
         request()->validate([
             'avatar' => 'image|nullable',
             'passwordCheck' => 'required|current_password',
@@ -44,7 +46,7 @@ class UserController extends Controller
         ]);
         $userAtt = request()->validate([
             'phone' => 'min:10|max:13|nullable',
-            'name' => ['required', 'max:32', 'min:2', Rule::unique('users', 'name')->ignore($id)]
+            'name' => ['required', 'max:32', 'min:2', Rule::unique('users', 'name')->ignore($user->id)]
         ]);
         !request('password') ?: $userAtt['password'] = request('password');
 

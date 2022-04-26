@@ -53,7 +53,7 @@ class ProductController extends Controller
             'image.*' => 'image|nullable|distinct'
         ]);
         $productAttributes = request()->validate([
-            'title' => 'string|required|max:50',
+            'title' => 'string|required|max:50|min:2',
             'price' => 'integer|required',
             'description' => 'string|required|max:1500',
             'in_stock' => 'string',
@@ -79,18 +79,27 @@ class ProductController extends Controller
         return redirect('/' . request('category_slug') . '/products')->with('success', 'Product stored');
     }
 
-    public function edit()
+    public function edit(Product $product)
     {
+        $this->authorize('updateDelete', $product);
 
+        return view('product.edit', ['product' => $product, 'tags' => $product->category->tags()]);
     }
 
-    public function update()
+    public function update(Product $product)
     {
+        $this->authorize('updateDelete', $product);
 
+        request()->validate([
+            'title'=>'min:30'
+        ]);
     }
 
-    public function destroy()
+    public function destroy(Product $product)
     {
+        $this->authorize('updateDelete', $product);
 
+        $product->delete();
+        return back()->with('success', 'Product deleted');
     }
 }

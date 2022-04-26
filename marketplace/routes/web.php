@@ -19,14 +19,16 @@ Route::post('login', [SessionController::class, 'store'])->middleware('guest');
 Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 //User
 Route::get('user{user:id}', [UserController::class, 'show']);
-Route::get('user{user:id}/edit', [UserController::class, 'edit'])->middleware('can:currentUser');
-Route::patch('user{user:id}', [UserController::class, 'update'])->middleware('can:currentUser');
+Route::get('user{user:id}/edit', [UserController::class, 'edit'])->middleware('auth');
+Route::patch('user{user:id}', [UserController::class, 'update'])->middleware('auth');
 //Products
 Route::name('products')->get('{category:slug}/products', [ProductController::class, 'index']);
 Route::get('{category:slug}/products/create', [ProductController::class, 'create'])->middleware('auth');
 Route::post('{category:slug}/products', [ProductController::class, 'store'])->middleware('auth');
 Route::name('product')->get('products/{product:slug}', [ProductController::class, 'show']);
-
+Route::get('products/{product:slug}/edit', [ProductController::class, 'edit'])->middleware('auth');
+Route::patch('products/{product:slug}', [ProductController::class, 'update'])->middleware('auth');
+Route::delete('products/{product:slug}', [ProductController::class, 'destroy'])->middleware('auth');
 
 //Comments
 Route::post('{product:id}/comment', [CommentController::class, 'store'])->middleware('auth');

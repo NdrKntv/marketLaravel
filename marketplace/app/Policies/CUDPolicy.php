@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\DB;
 
-class ProductCommentPolicy
+class CUDPolicy
 {
     use HandlesAuthorization;
 
@@ -22,7 +22,7 @@ class ProductCommentPolicy
 
     public function updateDelete(User $user, $model)
     {
-        return $user->role === 'admin' || $user->id === $model->user_id;
+        return $user->role === 'admin' || $user->id === ($model->user_id??$model->id);
     }
 
     public function createComment(User $user, $product): bool

@@ -112,23 +112,15 @@
                         <div class="card mb-3" style="width: 16rem; {{$product->active==1?:'background: #dd6470d4'}}">
                             @can('updateDelete', $product)
                                 <div class="position-absolute">
-                                    <form method="post" action="/product/{{$product->id}}" style="width: 30px">
+                                    <form method="post" action="/products/{{$product->slug}}" style="width: 30px">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="bg-danger">D</button>
                                     </form>
                                     <div x-data="{show:false}">
-                                        <button class="bg-gradient" @click="show=true">U</button>
-                                        <form x-show="show" @click.outside="show = false" method="post"
-                                              class="bg-light p-1 rounded-1"
-                                              action="/product/{{$product->id}}"
-                                              style="display: none; position: absolute; z-index: 1000">
-                                            @csrf
-                                            @method('patch')
-                                            <div>
-                                                <button type="submit" class="btn btn-secondary">Submit</button>
-                                            </div>
-                                        </form>
+                                        <button class="bg-light"
+                                        ><a href="/products/{{$product->slug}}/edit"
+                                            class="text-black text-decoration-none">U</a></button>
                                     </div>
                                     <form method="post" action="/product/{{$product->id}}" style="width: 30px">
                                         @csrf

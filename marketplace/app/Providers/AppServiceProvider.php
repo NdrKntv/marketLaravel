@@ -31,8 +31,5 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin', function (User $user) {
             return $user->role == 'admin';
         });
-        Gate::define('currentUser', function (User $user) {
-            return $user->id == request('user') || $user->role == 'admin';
-        });
     }
 }
