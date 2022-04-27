@@ -49,7 +49,7 @@ class ProductController extends Controller
         request()->validate([
             'tags' => 'array|nullable|max:4',
             'tags.*' => 'integer|nullable|distinct',
-            'image' => 'array|nullable|max:7',
+            'image' => 'array|nullable|max:8',
             'image.*' => 'image|nullable|distinct'
         ]);
         $productAttributes = request()->validate([

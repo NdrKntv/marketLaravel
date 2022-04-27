@@ -1,5 +1,5 @@
 <x-Layout>
-    <section class="container w-50">
+    <section class="container w-75">
         <h4>Add new product in {{$category->title}} category</h4>
         <form method="POST" action="/{{$category->slug}}/products" enctype="multipart/form-data">
             @csrf
@@ -42,7 +42,7 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <label for="image" class="form-label">Images (max: 7)</label>
+                <label for="image" class="form-label">Images (max: 8)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>
