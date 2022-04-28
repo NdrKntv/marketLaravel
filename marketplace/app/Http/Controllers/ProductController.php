@@ -89,9 +89,21 @@ class ProductController extends Controller
     public function update(Product $product)
     {
         $this->authorize('updateDelete', $product);
-
+//dd(request('image_limit'));
         request()->validate([
-            'title'=>'min:30'
+            'input_limit'=>'integer|min:0|max:8',
+            'tags' => 'array|nullable|max:4',
+            'tags.*' => 'integer|nullable|distinct',
+            'image' => 'array|nullable|max:'.request('input_limit'),
+            'image.*' => 'image|nullable|distinct'
+        ]);
+        $productAttributes = request()->validate([
+            'title' => 'string|required|max:50|min:22',
+            'price' => 'integer|required',
+            'description' => 'string|required|max:1500',
+            'in_stock' => 'string',
+            'newness' => 'int|nullable',
+            'active' => 'int|nullable'
         ]);
     }
 

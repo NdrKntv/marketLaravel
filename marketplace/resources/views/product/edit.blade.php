@@ -69,37 +69,15 @@
                         </div>
                     </div>
                 @endforeach
-                <script>
-                    for (let i = 1; i <= 8; i++) {
-                        let chBox = document.getElementById('delete_image' + i)
-                        let radio = document.getElementById('main_image' + i)
-                        if (!chBox) {
-                            break
-                        }
-                        chBox.addEventListener('change',
-                            function () {
-                                radio.toggleAttribute('disabled')
-                                radio.removeAttribute('checked')
-                                chBox.parentElement.classList.toggle('bg-danger')
-                            })
-                        if (chBox.hasAttribute('checked')){
-                            chBox.parentElement.classList.toggle('bg-danger')
-                        }
-                        radio.addEventListener('change', function () {
-                            radio.parentElement.classList.toggle('bg-success')
-                        })
-                        if (radio.hasAttribute('checked')){
-                            radio.parentElement.classList.toggle('bg-success')
-                        }
-                    }
-                </script>
             </div>
             <div class="mt-1">
-                <label for="image" class="form-label">Add images (max: 8, including already stored)</label>
+                <label for="image" class="form-label">Add images (max: <span id="span_limit">8</span>, including already
+                    stored)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
+                <input type="hidden" name="image_limit" id="input_limit" value="8">
             </div>
             <div class="mt-3">
                 <label for="in_stock" class="form-label">Product availability</label>
@@ -127,4 +105,60 @@
             <button type="submit" class="mt-3 btn-secondary btn">Update product</button>
         </form>
     </section>
+    <script>
+        let mainImage = document.getElementsByName('main_image')
+        let deleteImage = document.getElementsByName('delete_image[]')
+        let span = document.getElementById('span_limit')
+        let input = document.getElementById('input_limit')
+        let deleted = 0
+        for (let del of deleteImage) {
+            if (del.hasAttribute('checked')) {
+                deleted += 1
+            }
+        }
+
+        for (let i = 1; i <= mainImage.length; i++) {
+            let chBox = document.getElementById('delete_image' + i)
+            let radio = document.getElementById('main_image' + i)
+
+            if (chBox.hasAttribute('checked')) {
+                chBox.parentElement.classList.add('bg-danger')
+                radio.setAttribute('disabled', '')
+                radio.removeAttribute('checked')
+            }
+            if (radio.hasAttribute('checked')) {
+                radio.parentElement.classList.add('bg-success')
+            }
+
+            chBox.addEventListener('change',
+                function () {
+                    chBox.parentElement.classList.toggle('bg-danger')
+                    radio.toggleAttribute('disabled')
+                    if (radio.checked) {
+                        for (let e of mainImage) {
+                            if (e.disabled === false) {
+                                e.dispatchEvent(new Event('change', {'bubbles': true}))
+                                break
+                            }
+                        }
+                        radio.checked = false
+                        radio.parentElement.classList.remove('bg-success')
+                    }
+                    if (chBox.checked) {
+                        deleted += 1
+                    } else {
+                        deleted -= 1
+                    }
+                    span.innerText = 8 - deleteImage.length + deleted
+                    input.setAttribute('value', 8 - deleteImage.length + deleted)
+                })
+            radio.addEventListener('change', function () {
+                radio.checked = true
+                mainImage.forEach((e) => e.parentElement.classList.remove('bg-success'))
+                radio.parentElement.classList.add('bg-success')
+            })
+        }
+        span.innerText = 8 - deleteImage.length + deleted
+        input.setAttribute('value', 8 - deleteImage.length + deleted)
+    </script>
 </x-Layout>
