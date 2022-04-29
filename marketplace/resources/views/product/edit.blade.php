@@ -42,7 +42,9 @@
                     </div>
                 @endforeach
                 @error('tags')
-                <p class="text-danger">{{ $message }}</p>
+                <div class="w-100">
+                    <p class="text-danger">{{ $message }}</p>
+                </div>
                 @enderror
             </div>
             <div class="mt-3 d-flex row-cols-lg-4 flex-wrap">
@@ -71,13 +73,18 @@
                 @endforeach
             </div>
             <div class="mt-1">
+                @error('main_image')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('delete_image')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
                 <label for="image" class="form-label">Add images (max: <span id="span_limit">8</span>, including already
                     stored)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
-                <input type="hidden" name="image_limit" id="input_limit" value="8">
             </div>
             <div class="mt-3">
                 <label for="in_stock" class="form-label">Product availability</label>
@@ -109,7 +116,6 @@
         let mainImage = document.getElementsByName('main_image')
         let deleteImage = document.getElementsByName('delete_image[]')
         let span = document.getElementById('span_limit')
-        let input = document.getElementById('input_limit')
         let deleted = 0
         for (let del of deleteImage) {
             if (del.hasAttribute('checked')) {
@@ -150,7 +156,6 @@
                         deleted -= 1
                     }
                     span.innerText = 8 - deleteImage.length + deleted
-                    input.setAttribute('value', 8 - deleteImage.length + deleted)
                 })
             radio.addEventListener('change', function () {
                 radio.checked = true
@@ -159,6 +164,5 @@
             })
         }
         span.innerText = 8 - deleteImage.length + deleted
-        input.setAttribute('value', 8 - deleteImage.length + deleted)
     </script>
 </x-Layout>

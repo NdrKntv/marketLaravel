@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 
@@ -65,12 +67,16 @@ class ProductController extends Controller
         DB::transaction(function () use ($productAttributes) {
             try {
                 $product = Product::create($productAttributes);
+
+                $product->tags()->sync(request('tags'));
+
                 foreach (request()->file('image') ?? array() as $k => $image) {
                     $imagePath = $image->store('productImages/' . $product->id);
                     $product->images()->create(['main_image' => $k == 0 ?: 0, 'image_name' => $imagePath]);
                 }
-                $product->tags()->sync(request('tags'));
             } catch (\Exception $exception) {
+                Storage::deleteDirectory('productImages/' . $product->id);
+
                 throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
 //                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
@@ -89,22 +95,52 @@ class ProductController extends Controller
     public function update(Product $product)
     {
         $this->authorize('updateDelete', $product);
-//dd(request('image_limit'));
+
+        $currentImages = $product->images();
+        $deleted = $currentImages->whereIn('id', request('delete_image') ?? []);
+        $imageLimit = 8 - $currentImages->count() + $deleted->count();
+        ////////////!!!!!!!!1
+        foreach ($deleted->get() as $img) {
+           dd($img->image_name);
+        }
         request()->validate([
-            'input_limit'=>'integer|min:0|max:8',
+            'main_image' => ['nullable', 'integer', 'exists:images,id,product_id,' . $product->id],
+            'delete_image' => 'array|nullable',
+            'delete_image.*' => ['nullable', 'integer', 'exists:images,id,product_id,' . $product->id],
             'tags' => 'array|nullable|max:4',
             'tags.*' => 'integer|nullable|distinct',
-            'image' => 'array|nullable|max:'.request('input_limit'),
+            'image' => 'array|nullable|max:' . $imageLimit,
             'image.*' => 'image|nullable|distinct'
         ]);
-        $productAttributes = request()->validate([
-            'title' => 'string|required|max:50|min:22',
+        $attributes = request()->validate([
+            'title' => 'string|required|max:50|min:2',
             'price' => 'integer|required',
             'description' => 'string|required|max:1500',
             'in_stock' => 'string',
             'newness' => 'int|nullable',
             'active' => 'int|nullable'
         ]);
+
+        DB::transaction(function () use ($attributes, $product, $currentImages, $deleted) {
+            try {
+                $product->tags()->sync(request('tags'));
+
+                $deleted->delete();
+
+                $attributes += ['slug' => '', 'newness'=>request('newness')??'1', 'active'=>request('active')??'1'];
+                $product->update($attributes);
+
+            } catch (\Exception $exception) {
+//                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
+                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
+            }
+        });
+////!!!!!!!!!!!!!!!!!!!!!!!!!!11
+        foreach ($deleted->get() as $img) {
+            Storage::delete($img->image_name);
+        }
+
+        return redirect('/products/' . $product->slug . '/edit')->with('success', 'Product edited');
     }
 
     public function destroy(Product $product)
@@ -112,6 +148,9 @@ class ProductController extends Controller
         $this->authorize('updateDelete', $product);
 
         $product->delete();
+
+        Storage::deleteDirectory('productImages/' . $product->id);
+
         return back()->with('success', 'Product deleted');
     }
 }

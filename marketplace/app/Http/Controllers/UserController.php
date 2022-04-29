@@ -44,6 +44,12 @@ class UserController extends Controller
             'password' => 'min:6|nullable',
             'confirmNewPassword' => 'same:password'
         ]);
+        $descriptionAtt = request()->validate([
+            'description' => 'max:1500',
+            'website' => 'url|nullable',
+            'instagram' => 'url|nullable',
+            'facebook' => 'url|nullable'
+        ]);
         $userAtt = request()->validate([
             'phone' => 'min:10|max:13|nullable',
             'name' => ['required', 'max:32', 'min:2', Rule::unique('users', 'name')->ignore($user->id)]
@@ -59,16 +65,10 @@ class UserController extends Controller
             Storage::delete($user->avatar);
         }
 
-        $descriptionAtt = request()->validate([
-            'description' => 'max:1500',
-            'website' => 'url|nullable',
-            'instagram' => 'url|nullable',
-            'facebook' => 'url|nullable'
-        ]);
-
         if ($descriptionAtt) {
             $user->description()->update($descriptionAtt);
         }
+
         $user->update($userAtt);
 
         return redirect('/user' . $user->id)->with('success', 'Edited');
