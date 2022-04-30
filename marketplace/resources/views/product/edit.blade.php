@@ -1,6 +1,6 @@
 <x-Layout>
     <section class="container w-75">
-        <h4>Edit product {{$product->title}}</h4>
+        <h4>Edit product <a href="/products/{{$product->slug}}">{{$product->title}}</a></h4>
         <form method="POST" action="/products/{{$product->slug}}" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
@@ -57,7 +57,7 @@
                                 class="h-50 bg-opacity-50 d-flex align-items-center justify-content-center">
                                 <input type="radio" name="main_image" value="{{$image->id}}"
                                        id="main_image{{$loop->iteration}}"
-                                    {{old('main_image')?(old('main_image')!=$image->id?:'checked'):(!$loop->first?:'checked')}}>
+                                    {{old('main_image')?(old('main_image')!=$image->id?:'checked'):($image->main_image!=1?:'checked')}}>
                                 <label for="main_image{{$loop->iteration}}" class="fw-bold"
                                        style="text-shadow: 0px 0px 5px #FFFFFF">Main image</label>
                             </div>
@@ -79,8 +79,7 @@
                 @error('delete_image')
                 <p class="text-danger">{{ $message }}</p>
                 @enderror
-                <label for="image" class="form-label">Add images (max: <span id="span_limit">8</span>, including already
-                    stored)</label>
+                <label for="image" class="form-label">Add images (max: <span id="span_limit">8</span>)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
                 @error('image')
                 <p class="text-danger">{{ $message }}</p>

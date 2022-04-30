@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 
@@ -70,7 +70,7 @@ class ProductController extends Controller
 
                 $product->tags()->sync(request('tags'));
 
-                foreach (request()->file('image') ?? array() as $k => $image) {
+                foreach (request()->file('image') ?? [] as $k => $image) {
                     $imagePath = $image->store('productImages/' . $product->id);
                     $product->images()->create(['main_image' => $k == 0 ?: 0, 'image_name' => $imagePath]);
                 }
@@ -96,13 +96,12 @@ class ProductController extends Controller
     {
         $this->authorize('updateDelete', $product);
 
-        $currentImages = $product->images();
-        $deleted = $currentImages->whereIn('id', request('delete_image') ?? []);
-        $imageLimit = 8 - $currentImages->count() + $deleted->count();
-        ////////////!!!!!!!!1
+        $deleted = $product->images()->whereIn('id', request('delete_image') ?? []);
+        $imageLimit = 8 - $product->images->count() + $deleted->count();
         foreach ($deleted->get() as $img) {
-           dd($img->image_name);
+            $deletedArr[] = $img->image_name;
         }
+
         request()->validate([
             'main_image' => ['nullable', 'integer', 'exists:images,id,product_id,' . $product->id],
             'delete_image' => 'array|nullable',
@@ -121,24 +120,37 @@ class ProductController extends Controller
             'active' => 'int|nullable'
         ]);
 
-        DB::transaction(function () use ($attributes, $product, $currentImages, $deleted) {
+        DB::transaction(function () use ($attributes, $product, $deleted) {
             try {
                 $product->tags()->sync(request('tags'));
 
-                $deleted->delete();
-
-                $attributes += ['slug' => '', 'newness'=>request('newness')??'1', 'active'=>request('active')??'1'];
+                $attributes += ['newness' => request('newness') ?? '1', 'active' => request('active') ?? '1'];
                 $product->update($attributes);
 
+                $deleted->delete();
+
+                if ($newMainImage = request('main_image')) {
+                    $mainImage = Image::where([['product_id', $product->id], ['main_image', 1]])->select('id')->first();
+                    if (!$mainImage || $mainImage->id != $newMainImage) {
+                        !$mainImage ?: $mainImage->update(['main_image' => 0]);
+                        Image::where('id', $newMainImage)->update(['main_image' => 1]);
+                    }
+                }
+
+                foreach (request()->file('image') ?? [] as $image) {
+                    $imagePath = $image->store('productImages/' . $product->id);
+                    $deleteIfFail[] = $imagePath;
+                    $product->images()->create(['main_image' => 0, 'image_name' => $imagePath]);
+                }
             } catch (\Exception $exception) {
+                !isset($deleteIfFail) || Storage::delete($deleteIfFail);
+
 //                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
                 throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
         });
-////!!!!!!!!!!!!!!!!!!!!!!!!!!11
-        foreach ($deleted->get() as $img) {
-            Storage::delete($img->image_name);
-        }
+
+        !isset($deletedArr) || Storage::delete($deletedArr);
 
         return redirect('/products/' . $product->slug . '/edit')->with('success', 'Product edited');
     }

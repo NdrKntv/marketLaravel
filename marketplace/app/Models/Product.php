@@ -65,7 +65,7 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(Image::class)->orderByDesc('main_image')
-            ->select('id', 'product_id', 'image_name');
+            ->select('id', 'product_id', 'main_image', 'image_name');
     }
 
     public function image()
