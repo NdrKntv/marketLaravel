@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
+use App\Services\ProductImagesService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -46,43 +49,26 @@ class ProductController extends Controller
         return view('product.create', ['category' => $category, 'tags' => $tags]);
     }
 
-    public function store()
+    public function store($cSlug, StoreProductRequest $request)
     {
-        request()->validate([
-            'tags' => 'array|nullable|max:4',
-            'tags.*' => 'integer|nullable|distinct',
-            'image' => 'array|nullable|max:8',
-            'image.*' => 'image|nullable|distinct'
-        ]);
-        $productAttributes = request()->validate([
-            'title' => 'string|required|max:50|min:2',
-            'price' => 'integer|required',
-            'description' => 'string|required|max:1500',
-            'in_stock' => 'string',
-            'newness' => 'int|nullable',
-            'active' => 'int|nullable'
-        ]);
-        $productAttributes += ['user_id' => auth()->id(), 'category_id' => request('category_id'), 'slug' => ''];
-
-        DB::transaction(function () use ($productAttributes) {
+        DB::transaction(function () use ($request) {
             try {
-                $product = Product::create($productAttributes);
+                $product = Product::create($request->except('tags', 'image'));
 
-                $product->tags()->sync(request('tags'));
+                $product->tags()->sync($request->get('tags') ?? []);
 
-                foreach (request()->file('image') ?? [] as $k => $image) {
+                foreach ($request->file('image') ?? [] as $k => $image) {
                     $imagePath = $image->store('productImages/' . $product->id);
                     $product->images()->create(['main_image' => $k == 0 ?: 0, 'image_name' => $imagePath]);
                 }
             } catch (\Exception $exception) {
-                Storage::deleteDirectory('productImages/' . $product->id);
-
+                !isset($product) || Storage::deleteDirectory('productImages/' . $product->id);
                 throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
 //                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
         });
 
-        return redirect('/' . request('category_slug') . '/products')->with('success', 'Product stored');
+        return redirect('/' . $cSlug . '/products')->with('success', 'Product stored');
     }
 
     public function edit(Product $product)
@@ -92,59 +78,37 @@ class ProductController extends Controller
         return view('product.edit', ['product' => $product, 'tags' => $product->category->tags()]);
     }
 
-    public function update(Product $product)
+    public function update(Product $product, UpdateProductRequest $request)
     {
         $this->authorize('updateDelete', $product);
 
-        $deleted = $product->images()->whereIn('id', request('delete_image') ?? []);
-        $imageLimit = 8 - $product->images->count() + $deleted->count();
-        foreach ($deleted->get() as $img) {
+        foreach ($request->deleted()->get() as $img) {
             $deletedArr[] = $img->image_name;
         }
 
-        request()->validate([
-            'main_image' => ['nullable', 'integer', 'exists:images,id,product_id,' . $product->id],
-            'delete_image' => 'array|nullable',
-            'delete_image.*' => ['nullable', 'integer', 'exists:images,id,product_id,' . $product->id],
-            'tags' => 'array|nullable|max:4',
-            'tags.*' => 'integer|nullable|distinct',
-            'image' => 'array|nullable|max:' . $imageLimit,
-            'image.*' => 'image|nullable|distinct'
-        ]);
-        $attributes = request()->validate([
-            'title' => 'string|required|max:50|min:2',
-            'price' => 'integer|required',
-            'description' => 'string|required|max:1500',
-            'in_stock' => 'string',
-            'newness' => 'int|nullable',
-            'active' => 'int|nullable'
-        ]);
-
-        DB::transaction(function () use ($attributes, $product, $deleted) {
+        DB::transaction(function () use ($product, $request) {
             try {
-                $product->tags()->sync(request('tags'));
+                $product->tags()->sync($request->get('tags') ?? []);
 
-                $attributes += ['newness' => request('newness') ?? '1', 'active' => request('active') ?? '1'];
-                $product->update($attributes);
+                $product->update($request->safe(['title', 'price', 'description', 'in_stock', 'newness', 'active']));
 
-                $deleted->delete();
+                $request->deleted()->delete();
 
-                if ($newMainImage = request('main_image')) {
+                if ($newMainImage = $request->get('main_image')) {
                     $mainImage = Image::where([['product_id', $product->id], ['main_image', 1]])->select('id')->first();
                     if (!$mainImage || $mainImage->id != $newMainImage) {
                         !$mainImage ?: $mainImage->update(['main_image' => 0]);
                         Image::where('id', $newMainImage)->update(['main_image' => 1]);
                     }
                 }
-
-                foreach (request()->file('image') ?? [] as $image) {
-                    $imagePath = $image->store('productImages/' . $product->id);
-                    $deleteIfFail[] = $imagePath;
-                    $product->images()->create(['main_image' => 0, 'image_name' => $imagePath]);
-                }
+                ProductImagesService::upload($request, $product);
+//                foreach ($request->file('image') ?? [] as $image) {
+//                    $imagePath = $image->store('productImages/' . $product->id);
+//                    $deleteIfFail[] = $imagePath;
+//                    $product->images()->create(['main_image' => 0, 'image_name' => $imagePath]);
+//                }
             } catch (\Exception $exception) {
                 !isset($deleteIfFail) || Storage::delete($deleteIfFail);
-
 //                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
                 throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }

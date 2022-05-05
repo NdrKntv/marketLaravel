@@ -37,10 +37,10 @@
                         <label for="{{$tag->id}}">#{{$tag->title}}</label>
                     </div>
                 @endforeach
-                @error('tags')
-                <p class="text-danger">{{ $message }}</p>
-                @enderror
             </div>
+            @error('tags')
+            <p class="text-danger">{{ $message }}</p>
+            @enderror
             <div class="mt-3">
                 <label for="image" class="form-label">Images (max: 8)</label>
                 <input type="file" id="image" name="image[]" multiple="multiple">
@@ -65,7 +65,6 @@
                 <input type="checkbox" name="active" id="inactive" value="0" {{old('active')!=='0'?:'checked'}}>
             </div>
             <input type="hidden" name="category_id" value="{{$category->id}}">
-            <input type="hidden" name="category_slug" value="{{$category->slug}}">
             <button type="submit" class="mt-3 btn-secondary btn">Create new product</button>
         </form>
     </section>

@@ -99,7 +99,7 @@
             </article>
             <article class="col-9 d-flex flex-wrap justify-content-evenly start-0">
                 @auth()
-                    <div class="w-100 mb-2 d-flex justify-content-center">
+                    <div class="w-100 mb-2 d-flex justify-content-center" style="max-height: 50px">
                         <div class="p-1 rounded d-flex gap-5" style="border: 1px dashed #6c757d;">
                             <a href="products/create" class="btn btn-secondary">Add product <b>+</b></a>
                             <a href="?user={{auth()->id()}}&inactive=1" class="btn btn-secondary">My ALL products</a>
