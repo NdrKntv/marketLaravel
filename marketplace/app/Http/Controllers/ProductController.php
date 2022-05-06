@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Category;
-use App\Models\Image;
 use App\Models\Product;
 use App\Services\ProductImagesService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 
@@ -55,14 +53,12 @@ class ProductController extends Controller
             try {
                 $product = Product::create($request->except('tags', 'image'));
 
-                $product->tags()->sync($request->get('tags') ?? []);
+                $product->tags()->sync($request->get('tags'));
 
-                foreach ($request->file('image') ?? [] as $k => $image) {
-                    $imagePath = $image->store('productImages/' . $product->id);
-                    $product->images()->create(['main_image' => $k == 0 ?: 0, 'image_name' => $imagePath]);
-                }
+                $imageService = new ProductImagesService($product, $request);
+                $imageService->upload();
             } catch (\Exception $exception) {
-                !isset($product) || Storage::deleteDirectory('productImages/' . $product->id);
+                !isset($imageService) || $imageService->deleteFromStorage(true);
                 throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
 //                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
@@ -82,39 +78,23 @@ class ProductController extends Controller
     {
         $this->authorize('updateDelete', $product);
 
-        foreach ($request->deleted()->get() as $img) {
-            $deletedArr[] = $img->image_name;
-        }
-
-        DB::transaction(function () use ($product, $request) {
+        $imageService = new ProductImagesService($product, $request);
+        DB::transaction(function () use ($product, $request, $imageService) {
             try {
-                $product->tags()->sync($request->get('tags') ?? []);
+                $product->tags()->sync($request->get('tags'));
 
                 $product->update($request->safe(['title', 'price', 'description', 'in_stock', 'newness', 'active']));
 
-                $request->deleted()->delete();
-
-                if ($newMainImage = $request->get('main_image')) {
-                    $mainImage = Image::where([['product_id', $product->id], ['main_image', 1]])->select('id')->first();
-                    if (!$mainImage || $mainImage->id != $newMainImage) {
-                        !$mainImage ?: $mainImage->update(['main_image' => 0]);
-                        Image::where('id', $newMainImage)->update(['main_image' => 1]);
-                    }
-                }
-                ProductImagesService::upload($request, $product);
-//                foreach ($request->file('image') ?? [] as $image) {
-//                    $imagePath = $image->store('productImages/' . $product->id);
-//                    $deleteIfFail[] = $imagePath;
-//                    $product->images()->create(['main_image' => 0, 'image_name' => $imagePath]);
-//                }
+                $imageService->deleteFromDB();
+                $imageService->mainImage();
+                $imageService->upload();
             } catch (\Exception $exception) {
-                !isset($deleteIfFail) || Storage::delete($deleteIfFail);
-//                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
-                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
+                $imageService->deleteFromStorage(false, true);
+                throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
+//                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
         });
-
-        !isset($deletedArr) || Storage::delete($deletedArr);
+        $imageService->deleteFromStorage();
 
         return redirect('/products/' . $product->slug . '/edit')->with('success', 'Product edited');
     }
@@ -124,8 +104,7 @@ class ProductController extends Controller
         $this->authorize('updateDelete', $product);
 
         $product->delete();
-
-        Storage::deleteDirectory('productImages/' . $product->id);
+        (new ProductImagesService($product))->deleteFromStorage( true);
 
         return back()->with('success', 'Product deleted');
     }

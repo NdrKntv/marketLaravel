@@ -24,7 +24,7 @@ class UpdateProductRequest extends FormRequest
             'delete_image.*' => ['nullable', 'integer', 'exists:images,id,product_id,' . $this->product->id],
             'tags' => 'array|nullable|max:4',
             'tags.*' => 'integer|nullable|distinct',
-            'image' => 'array|nullable|max:' . (8 - $this->product->images->count() + $this->deleted()->count()), //!!
+            'image' => 'array|nullable|max:' . (8 - $this->product->images()->count() + count($this->get('delete_image')??[])),
             'image.*' => 'image|nullable|distinct',
             'title' => 'string|required|max:50|min:2',
             'price' => 'integer|required',
