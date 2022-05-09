@@ -27,12 +27,13 @@ class ProductImagesService
         $this->request->deleted()->delete();
     }
 
-    public function deleteFromStorage($deleteDirectory = false, $updateRollback = false)
+    public function deleteFromStorage($deleteDirectory = false, $rollback = false)
     {
         if ($deleteDirectory) {
             Storage::deleteDirectory('productImages/' . $this->product->id);
+            $rollback?:$this->product->images()->delete();
         } else {
-            Storage::delete($updateRollback ? $this->deleteIfFail : $this->deletedArr);
+            Storage::delete($rollback ? $this->deleteIfFail : $this->deletedArr);
             count(Storage::files('productImages/' . $this->product->id)) ?:
                 Storage::deleteDirectory('productImages/' . $this->product->id);
         }

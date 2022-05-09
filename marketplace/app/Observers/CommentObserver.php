@@ -22,23 +22,11 @@ class CommentObserver
 
     }
 
-    /**
-     * Handle the Comment "created" event.
-     *
-     * @param \App\Models\Comment $comment
-     * @return void
-     */
     public function created(Comment $comment)
     {
         $this->ratingChanger('c', $comment);
     }
 
-    /**
-     * Handle the Comment "updated" event.
-     *
-     * @param \App\Models\Comment $comment
-     * @return void
-     */
     public function updated(Comment $comment)
     {
         if ($comment->getOriginal('rating') != $comment->rating) {
@@ -46,12 +34,6 @@ class CommentObserver
         }
     }
 
-    /**
-     * Handle the Comment "deleted" event.
-     *
-     * @param \App\Models\Comment $comment
-     * @return void
-     */
     public function deleted(Comment $comment)
     {
         $this->ratingChanger('d', $comment);

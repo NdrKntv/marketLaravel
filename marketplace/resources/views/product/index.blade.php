@@ -117,16 +117,10 @@
                                         @method('delete')
                                         <button type="submit" class="bg-danger">D</button>
                                     </form>
-                                    <div x-data="{show:false}">
-                                        <button class="bg-light"
-                                        ><a href="/products/{{$product->slug}}/edit"
-                                            class="text-black text-decoration-none">U</a></button>
-                                    </div>
-                                    <form method="post" action="/product/{{$product->id}}" style="width: 30px">
-                                        @csrf
-                                        @method('put')
-                                        <button type="submit" class="bg-warning">A/</button>
-                                    </form>
+                                    <button class="bg-light">
+                                        <a href="/products/{{$product->slug}}/edit"
+                                           class="text-black text-decoration-none">U</a>
+                                    </button>
                                 </div>
                             @endcan
                             <a href="/{{'products/'.$product->slug}}"><img

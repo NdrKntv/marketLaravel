@@ -91,5 +91,11 @@
             </div>
             <button type="submit" class="mt-3 btn-secondary btn">Edit changes</button>
         </form>
+            <form action="/forgot-password" method="POST" class="mt-3 w-75 container">
+                @csrf
+                <input type="hidden" name="email" value="{{$user->email}}">
+                <div class="fw-bold">Forgot password?</div>
+                <button class="btn-secondary btn">Send email with reset link</button>
+            </form>
     </section>
 </x-Layout>

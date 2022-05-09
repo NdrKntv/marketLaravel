@@ -17,7 +17,7 @@ class CommentFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            'product_id' => Product::all()->random()->id,
+            'product_id' => Product::where('active', 1)->get()->random()->id,
             'rating' => $this->faker->randomElement(['like', 'dislike', 'normal']),
             'body' => $this->faker->sentence()
         ];

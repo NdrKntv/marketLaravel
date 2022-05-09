@@ -15,14 +15,17 @@ class SessionController
     {
         $attributes = request()->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|string|min:6'
         ]);
         if (!auth()->attempt($attributes)) {
             throw ValidationException::withMessages(['password' => 'Wrong email or password']);
         }
         session()->regenerate();
 
-        return redirect(request('redirectLink')??'/')->with('success', 'Hello, ' . auth()->user()->name);
+        $redirect = request('redirectLink');
+        !str_contains($redirect, 'reset-password') ?: $redirect = null;
+
+        return redirect($redirect ?? '/')->with('success', 'Hello, ' . auth()->user()->name);
     }
 
     public function destroy()

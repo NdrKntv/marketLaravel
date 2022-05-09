@@ -10,13 +10,16 @@
                 <p class="text-danger">{{$message}}</p>
                 @enderror
             </div>
-            <div class="mb-3">
+            <div>
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password"
                        name="password" placeholder="Your password" required>
                 @error('password')
                 <p class="text-danger">{{$message}}</p>
                 @enderror
+            </div>
+            <div class="mb-3">
+                <a href="/forgot-password">Forgot password</a>
             </div>
             <input type="hidden" name="redirectLink" value="{{$_SERVER['HTTP_REFERER']??''}}">
             <button type="submit" class="btn btn-primary">Log in</button>

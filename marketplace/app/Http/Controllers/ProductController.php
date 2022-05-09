@@ -58,9 +58,8 @@ class ProductController extends Controller
                 $imageService = new ProductImagesService($product, $request);
                 $imageService->upload();
             } catch (\Exception $exception) {
-                !isset($imageService) || $imageService->deleteFromStorage(true);
+                !isset($imageService) || $imageService->deleteFromStorage(true, true);
                 throw ValidationException::withMessages(['title' => 'Something goes wrong, try again later =(']);
-//                throw ValidationException::withMessages(['title' => $exception->getMessage()]);
             }
         });
 
@@ -104,7 +103,7 @@ class ProductController extends Controller
         $this->authorize('updateDelete', $product);
 
         $product->delete();
-        (new ProductImagesService($product))->deleteFromStorage( true);
+        (new ProductImagesService($product))->deleteFromStorage(true);
 
         return back()->with('success', 'Product deleted');
     }

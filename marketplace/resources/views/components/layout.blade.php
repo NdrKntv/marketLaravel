@@ -9,6 +9,18 @@
     <title>Document</title>
 </head>
 <body>
+@can('not-verified')
+    <div class="bg-danger d-flex flex-column align-items-center">
+        <div>Verify your email to take all the features!</div>
+        <div>
+            Did not receive a mail?
+            <form action="/email/verification-notification" method="post" class="d-inline">
+                @csrf
+                <button type="submit" class="border-0 bg-danger fw-bold">Resend verification email</button>
+            </form>
+        </div>
+    </div>
+@endcan
 <div class="container">
     <header class="container border-bottom">
         <nav class="navbar navbar-light bg-light justify-content-around row">

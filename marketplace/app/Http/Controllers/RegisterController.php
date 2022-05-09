@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -22,9 +23,10 @@ class RegisterController
         ]);
         request()->validate(['confirmPassword' => 'same:password']);
 
+        $user = null;
         if (request()->has('shopCheck')) {
             $attributes['role'] = 'shop';
-            DB::transaction(function () use ($attributes) {
+            DB::transaction(function () use ($attributes, &$user) {
                 try {
                     $user = User::create($attributes);
                     DB::table('shop_descriptions')->insert(['user_id' => $user->id]);
@@ -34,9 +36,11 @@ class RegisterController
             });
         } else {
             $attributes['role'] = 'human';
-            User::create($attributes);
+            $user = User::create($attributes);
         }
+        auth()->login($user);
+        event(new Registered($user));
 
-        return redirect('/login')->with('success', 'You create an account');
+        return redirect('/')->with('success', 'Welcome ' . $user->name);
     }
 }

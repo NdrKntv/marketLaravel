@@ -18,7 +18,7 @@ class Comment extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class)->select('id', 'category_id', 'title', 'slug')
+        return $this->belongsTo(Product::class)->select('id', 'category_id', 'title', 'slug', 'rating')
             ->with('category:categories.id,categories.slug');
     }
 }
