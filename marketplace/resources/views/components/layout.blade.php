@@ -44,7 +44,7 @@
             </form>
             <div class="col-4 nav-item d-flex justify-content-end px-0">
                 @auth()
-                    <div class="dropdown mx-4">
+                    <div class="dropdown mx-4" id="favorites-list">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites

@@ -36,6 +36,7 @@ Route::post('{product:id}/comment', [CommentController::class, 'store'])->middle
 Route::delete('comment/{comment:id}', [CommentController::class, 'destroy'])->middleware('auth');
 Route::patch('comment/{comment:id}', [CommentController::class, 'update'])->middleware('auth');
 //Favorites
+Route::get('favorites', [FavoritesController::class, 'index'])->middleware('auth');
 Route::post('favorites/{product:id}', [FavoritesController::class, 'store'])->middleware('auth');
 Route::delete('favorites/{product:id}', [FavoritesController::class, 'destroy'])->middleware('auth');
 //Email verification

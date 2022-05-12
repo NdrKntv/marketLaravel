@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\DB;
 
 class FavoritesController extends Controller
 {
+    public function index()
+    {
+        return response()->json(auth()->user()->favorites);
+    }
+
     public function store($id)
     {
         if (DB::table('product_user')->where([['product_id', $id], ['user_id', auth()->user()->id]])->doesntExist()) {
@@ -13,9 +18,7 @@ class FavoritesController extends Controller
                 'product_id' => $id,
                 'user_id' => auth()->user()->id
             ]);
-            return back()->with('success', 'Added to favorites');
         }
-        return back();
     }
 
     public function destroy($id)
@@ -24,6 +27,5 @@ class FavoritesController extends Controller
             ['product_id', $id],
             ['user_id', auth()->user()->id]
         ])->delete();
-        return back()->with('success', 'Deleted from favorites');
     }
 }

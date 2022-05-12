@@ -1,3 +1,4 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <x-Layout>
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">
@@ -150,28 +151,25 @@
                                     <a href="/{{'products/'.$product->slug}}" class="btn btn-secondary">More
                                         details</a>
                                     @auth
-                                        @if(auth()->user()->favorites->contains($product->id))
-                                            <form method="POST" action="/favorites/{{$product->id}}"
-                                                  class="d-inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-secondary"
-                                                        style="margin-left: 4px">
-                                                    <img src="{{asset('images/filled-star.png')}}" alt="Favorites"
-                                                         style="height: 20px; width: 20px">
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form method="POST" action="/favorites/{{$product->id}}"
-                                                  class="d-inline-block">
-                                                @csrf
-                                                <button type="submit" class="btn btn-secondary"
-                                                        style="margin-left: 4px">
-                                                    <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
-                                                         style="height: 20px; width: 20px">
-                                                </button>
-                                            </form>
-                                        @endif
+                                        {{--                                        @if(auth()->user()->favorites->contains($product->id))--}}
+                                        {{--                                            <form method="POST" action="/favorites/{{$product->id}}"--}}
+                                        {{--                                                  class="d-inline-block favorites-form" id="{{$product->id}}">--}}
+                                        {{--                                                @csrf--}}
+                                        {{--                                                @method('DELETE')--}}
+                                        {{--                                                <button type="submit" class="btn btn-secondary"--}}
+                                        {{--                                                        style="margin-left: 4px">--}}
+                                        {{--                                                    <img src="{{asset('images/filled-star.png')}}" alt="Favorites"--}}
+                                        {{--                                                         style="height: 20px; width: 20px">--}}
+                                        {{--                                                </button>--}}
+                                        {{--                                            </form>--}}
+                                        {{--                                        @else--}}
+                                        <button type="submit" id="{{$product->id}}"
+                                                class="btn btn-secondary favorites-toggle add"
+                                                style="margin-left: 4px">
+                                            <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
+                                                 style="height: 20px; width: 20px">
+                                        </button>
+                                        {{--                                        @endif--}}
                                         <a href="#" class="btn btn-secondary" style="margin-left: 4px">Buy</a>
                                     @endauth
                                 </div>
@@ -186,3 +184,63 @@
         </div>
     </div>
 </x-Layout>
+<script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+<script>
+    function ajaxRequest() {
+        if (!$('#favorites-list').length) {
+            return
+        }
+        $.ajax({
+            url: "http://127.0.0.1:8000/favorites",
+            method: 'GET',
+            success: function (favoritesObj) {
+                let favoritesIds = []
+                for (let i in favoritesObj) {
+                    favoritesIds.push(favoritesObj[i].id)
+                }
+                let products = $(".favorites-toggle");
+                products.each(function () {
+                    if (favoritesIds.some(v => v == this.id)) {
+                        $(this).children("img").attr("src", function (index, current) {
+                            return current.replace('empty', 'filled')
+                        })
+                        $(this).removeClass('add')
+                    }
+                })
+                // BUTTON
+                products.off()
+                products.click(function () {
+                    let id = this.id
+                    let token = $("meta[name='csrf-token']").attr("content");
+                    let method
+                    method = $(this).hasClass('add') ? 'POST' : 'DELETE'
+                    if (method === 'DELETE') {
+                        $(this).children("img").attr("src", function (index, current) {
+                            return current.replace('filled', 'empty')
+                        })
+                        $(this).addClass('add')
+                    }
+                    $.ajax({
+                        url: "http://127.0.0.1:8000/favorites/" + id,
+                        type: method,
+                        data: {
+                            "_token": token,
+                        },
+                        success: function () {
+                            console.log("it Works " + method);
+                            ajaxRequest()
+                        },
+                    })
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            },
+        })
+    }
+
+    $(document).ready(ajaxRequest());
+</script>
