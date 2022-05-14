@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <section class="container w-75">
         <h4>Edit product <a href="/products/{{$product->slug}}">{{$product->title}}</a></h4>
         <form method="POST" action="/products/{{$product->slug}}" enctype="multipart/form-data">
@@ -164,4 +164,4 @@
         }
         span.innerText = 8 - deleteImage.length + deleted
     </script>
-</x-Layout>
+</x-layout>

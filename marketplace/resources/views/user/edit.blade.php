@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <section class="container w-50">
         <h4>Edit profile</h4>
         <form method="POST" action="/user{{$user->id}}" class="container w-75" enctype="multipart/form-data">
@@ -98,4 +98,4 @@
                 <button class="btn-secondary btn">Send email with reset link</button>
             </form>
     </section>
-</x-Layout>
+</x-layout>

@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <section class="container w-75">
         <h4>Add new product in {{$category->title}} category</h4>
         <form method="POST" action="/{{$category->slug}}/products" enctype="multipart/form-data">
@@ -68,4 +68,4 @@
             <button type="submit" class="mt-3 btn-secondary btn">Create new product</button>
         </form>
     </section>
-</x-Layout>
+</x-layout>

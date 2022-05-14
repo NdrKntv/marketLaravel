@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <section class="d-flex flex-column">
         @foreach($categories as $category)
             <a href="/{{$category->slug}}/products" class="card bg-light text-black mt-3">
@@ -12,4 +12,4 @@
             </a>
         @endforeach
     </section>
-</x-Layout>
+</x-layout>

@@ -40,6 +40,6 @@ class StoreProductRequest extends FormRequest
 
     public function passedValidation()
     {
-        $this->merge(['user_id' => $this->user()->id, 'slug' => '']);
+        $this->merge(['user_id' => $this->user()->id]);
     }
 }

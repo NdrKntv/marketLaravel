@@ -16,7 +16,6 @@ class CreateProductUserTable extends Migration
         Schema::create('product_user', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained();
-            $table->timestamps();
         });
     }
 

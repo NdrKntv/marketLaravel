@@ -1,3 +1,5 @@
+@props(['script'])
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -30,7 +32,7 @@
                     <x-category-dropdown/>
                 @endif
             </div>
-            <form class="form-inline col-4" method="GET" action="">
+            <form class="form-inline col-4" method="GET" action="" style="margin-bottom: 0">
                 @if(request()->routeIs('products'))
                     <input class="form-control mr-sm-2 w-75 d-inline-block" type="search" placeholder="Search"
                            aria-label="Search" name="search" value="{{request('search')??''}}">
@@ -45,43 +47,42 @@
             <div class="col-4 nav-item d-flex justify-content-end px-0">
                 @auth()
                     <div class="dropdown mx-4" id="favorites-list">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        <button class="btn btn-secondary dropdown-toggle" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                                {{$favorites->count()}}
+{{--                                {{$favorites->count()}}--}}
                             </span>
                         </button>
-                        <ul class="dropdown-menu" style="max-height: 350px; width: 250px; overflow-y: scroll"
-                            aria-labelledby="dropdownMenuButton1">
-                            @foreach($favorites as $fav)
-                                <li>
-                                    <a class="dropdown-item {{request()->is('products/'.$fav->slug)?'bg-secondary text-white':''}}"
-                                       href="/{{'products/'.$fav->slug}}">
-                                        <h5 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%"
-                                        >{{$fav->title}}</h5>
-                                        <div>
-                                            <span class="fw-bold">{{$fav->price}}$</span>
-                                            <span>{{$fav->in_stock}}</span>
-                                        </div>
-                                        <div>From: {{$fav->category->title}}</div>
-                                    </a>
-                                </li>
-                            @endforeach
+                        <ul class="dropdown-menu" style="max-height: 350px; width: 250px; overflow-y: scroll">
+                            {{--                            @foreach($favorites as $fav)--}}
+                            {{--                                <li>--}}
+                            {{--                                    <a class="dropdown-item {{request()->is('products/'.$fav->slug)?'bg-secondary text-white':''}}"--}}
+                            {{--                                       href="/{{'products/'.$fav->slug}}">--}}
+                            {{--                                        <h5 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%"--}}
+                            {{--                                        >{{$fav->title}}</h5>--}}
+                            {{--                                        <div>--}}
+                            {{--                                            <span class="fw-bold">{{$fav->price}}$</span>--}}
+                            {{--                                            <span>{{$fav->in_stock}}</span>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div>From: {{$fav->category->title}}</div>--}}
+                            {{--                                    </a>--}}
+                            {{--                                </li>--}}
+                            {{--                            @endforeach--}}
                         </ul>
                     </div>
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        <button class="btn btn-secondary dropdown-toggle" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             {{auth()->user()->name}}
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/user{{auth()->user()->id}}">My profile</a></li>
                             <li><a class="dropdown-item" href="/user{{auth()->user()->id}}/edit">Account settings</a>
                             </li>
                             <li>
-                                <form method="POST" action="/logout">
+                                <form method="POST" action="/logout" class="mb-0">
                                     @csrf
                                     <button type="submit" class="dropdown-item">Logout</button>
                                 </form>
@@ -119,5 +120,8 @@
 <x-success_flash/>
 </body>
 <script src="{{asset('js/app.js')}}"></script>
+@if($script??false)
+    <script src="{{asset('js/'.$script.'.js')}}"></script>
+@endif
 </html>
 

@@ -18,14 +18,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $cats = [['Books', 'books_category_bg.jfif', 'books'],
-            ['Bags', 'bags_category_bg.jpg', 'bags'],
-            ['Sport equipment', 'sport_inventory_category_bg.jpg', 'sport-equipment']];
+        $cats = [['Books', 'books_category_bg.jfif'],
+            ['Bags', 'bags_category_bg.jpg'],
+            ['Sport equipment', 'sport_inventory_category_bg.jpg']];
         foreach ($cats as $c) {
             Category::factory()->create([
                 'title' => $c[0],
                 'image' => $c[1],
-                'slug' => $c[2]
             ]);
         }
 

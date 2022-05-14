@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <div class="w-50 m-auto px-5">
         <form action="/reset-password" method="POST">
             @csrf
@@ -22,4 +22,4 @@
             <button type="submit" class="btn btn-primary mt-3">Reset password</button>
         </form>
     </div>
-</x-Layout>
+</x-layout>

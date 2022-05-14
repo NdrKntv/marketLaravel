@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <div class="container">
         <section class="row justify-content-evenly">
             <article class="col-3">
@@ -122,4 +122,4 @@
             </section>
         @endif
     </div>
-</x-Layout>
+</x-layout>

@@ -21,7 +21,6 @@ class ProductFactory extends Factory
             'title' => $this->faker->sentence(),
             'price' => rand(1, 10000),
             'description' => $this->faker->paragraph(),
-            'slug' => $this->faker->slug(),
             'in_stock' => $this->faker->randomElement(['available', 'coming soon', 'on order']),
             'newness' => rand(0, 1),
             'active' => rand(0, 1)

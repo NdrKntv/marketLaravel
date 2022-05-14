@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout script="product/show">
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">
             {{Breadcrumbs::render('product', $product->category, $product)}}
@@ -197,12 +197,13 @@
                                     @method('delete')
                                     <button type="submit" class="bg-danger">D</button>
                                 </form>
-                                <div x-data="{show:false}">
-                                    <button class="bg-gradient" @click="show=true">U</button>
-                                    <form x-show="show" @click.outside="show = false" method="post"
-                                          class="bg-light p-1 rounded-1"
-                                          action="/comment/{{$comment->id}}"
-                                          style="display: none; position: absolute; z-index: 1000">
+                                <div class="dropdown">
+                                    <button class="bg-warning dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" data-bs-auto-close="outside">U
+                                    </button>
+                                    <form method="post"
+                                          class="bg-light p-1 rounded-1 dropdown-menu"
+                                          action="/comment/{{$comment->id}}">
                                         @csrf
                                         @method('patch')
                                         <textarea name="body" placeholder="Write something about this product" rows="3"
@@ -244,4 +245,4 @@
             </article>
         </section>
     </div>
-</x-Layout>
+</x-layout>

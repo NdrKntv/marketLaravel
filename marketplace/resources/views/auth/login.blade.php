@@ -1,4 +1,4 @@
-<x-Layout>
+<x-layout>
     <div class="w-50 m-auto px-5">
         <form method="POST" action="/login">
             @csrf
@@ -25,4 +25,4 @@
             <button type="submit" class="btn btn-primary">Log in</button>
         </form>
     </div>
-</x-Layout>
+</x-layout>
