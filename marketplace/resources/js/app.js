@@ -2,4 +2,5 @@ require('./bootstrap');
 
 window.$ = require('jquery');
 
-require('./favorites')
+require('./alert')
+require('./favorites');

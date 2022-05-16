@@ -50,7 +50,7 @@
                         <button class="btn btn-secondary dropdown-toggle" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites
-                            <span
+                            <span id="favorites-count"
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
 {{--                                {{$favorites->count()}}--}}
                             </span>
