@@ -126,25 +126,12 @@
                                     <a href="/{{'products/'.$product->slug}}" class="btn btn-secondary">More
                                         details</a>
                                     @auth
-                                        {{--                                        @if(auth()->user()->favorites->contains($product->id))--}}
-                                        {{--                                            <form method="POST" action="/favorites/{{$product->id}}"--}}
-                                        {{--                                                  class="d-inline-block favorites-form" id="{{$product->id}}">--}}
-                                        {{--                                                @csrf--}}
-                                        {{--                                                @method('DELETE')--}}
-                                        {{--                                                <button type="submit" class="btn btn-secondary"--}}
-                                        {{--                                                        style="margin-left: 4px">--}}
-                                        {{--                                                    <img src="{{asset('images/filled-star.png')}}" alt="Favorites"--}}
-                                        {{--                                                         style="height: 20px; width: 20px">--}}
-                                        {{--                                                </button>--}}
-                                        {{--                                            </form>--}}
-                                        {{--                                        @else--}}
                                         <button type="submit" id="{{$product->id}}"
                                                 class="btn btn-secondary favorites-toggle add"
                                                 style="margin-left: 4px">
                                             <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
                                                  style="height: 20px; width: 20px">
                                         </button>
-                                        {{--                                        @endif--}}
                                         <a href="#" class="btn btn-secondary" style="margin-left: 4px">Buy</a>
                                     @endauth
                                 </div>
