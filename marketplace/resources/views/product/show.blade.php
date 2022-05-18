@@ -130,26 +130,12 @@
                 <p class="d-inline-block">Stored: {{$product->created_at->diffForHumans()}}</p>
                 @auth
                     <div>
-                        @if(auth()->user()->favorites->contains($product->id))
-                            <form method="POST" action="/favorites/{{$product->id}}"
-                                  class="d-inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-secondary"
-                                        style="margin-left: 4px">
-                                    <img src="{{asset('images/filled-star.png')}}" alt="Favorites"
-                                         style="height: 20px; width: 20px">
-                                </button>
-                            </form>
-                        @else
-                            <form method="POST" action="/favorites/{{$product->id}}" class="d-inline-block">
-                                @csrf
-                                <button type="submit" class="btn btn-secondary" style="margin-left: 4px">
-                                    <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
-                                         style="height: 20px; width: 20px">
-                                </button>
-                            </form>
-                        @endif
+                        <button type="submit" id="{{$product->id}}"
+                                class="btn btn-secondary favorites-toggle add"
+                                style="margin-left: 4px">
+                            <img src="{{asset('images/empty-star.png')}}" alt="Favorites"
+                                 style="height: 20px; width: 20px">
+                        </button>
                         <a href="#" class="btn btn-secondary" style="margin-left: 10px">Buy</a>
                     </div>
                 @endauth

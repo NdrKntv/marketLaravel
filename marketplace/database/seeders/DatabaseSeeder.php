@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'shop'
         ]);
 
-        Tag::factory(20)->create();
+        Tag::factory(24)->create();
 
         Product::factory(120)->create()->each(fn($product) => $product->tags()
             ->attach(Tag::where('category_id', $product->category_id)->inRandomOrder()->limit(rand(0, 4))->get('id')));

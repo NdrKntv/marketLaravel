@@ -54,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         return $this->hasManyThrough(Comment::class, Product::class)
             ->select('comments.rating', 'comments.product_id', 'comments.created_at')
-            ->with('product')->latest()->limit(10);
+            ->with('product')->orderByDesc('comments.id')->limit(10);
     }
 
     public function favorites()

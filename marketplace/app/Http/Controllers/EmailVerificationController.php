@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
+    public function notice()
+    {
+        return back()->with('success', 'you can\'t do it, verify your email first!');
+    }
+
     public function verify(EmailVerificationRequest $request)
     {
         $request->fulfill();

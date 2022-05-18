@@ -25,26 +25,30 @@ Route::get('user{user:id}/edit', [UserController::class, 'edit'])->middleware('a
 Route::patch('user{user:id}', [UserController::class, 'update'])->middleware('auth');
 //Products
 Route::get('{category:slug}/products', [ProductController::class, 'index'])->name('products');
-Route::get('{category:slug}/products/create', [ProductController::class, 'create'])->middleware('auth');
-Route::post('{category:slug}/products', [ProductController::class, 'store'])->middleware('auth');
+Route::get('{category:slug}/products/create', [ProductController::class, 'create'])->middleware('auth', 'verified');
+Route::post('{category:slug}/products', [ProductController::class, 'store'])->middleware('auth', 'verified');
 Route::get('products/{product:slug}', [ProductController::class, 'show'])->name('product');
 Route::get('products/{product:slug}/edit', [ProductController::class, 'edit'])->middleware('auth');
 Route::patch('products/{product:slug}', [ProductController::class, 'update'])->middleware('auth');
 Route::delete('products/{product:slug}', [ProductController::class, 'destroy'])->middleware('auth');
 //Comments
-Route::post('{product:id}/comment', [CommentController::class, 'store'])->middleware('auth');
+Route::post('{product:id}/comment', [CommentController::class, 'store'])->middleware('auth', 'verified');
 Route::delete('comment/{comment:id}', [CommentController::class, 'destroy'])->middleware('auth');
 Route::patch('comment/{comment:id}', [CommentController::class, 'update'])->middleware('auth');
 //Favorites
-Route::get('favorites', [FavoritesController::class, 'index'])->middleware('auth');
-Route::post('favorites/{product:id}', [FavoritesController::class, 'store'])->middleware('auth');
-Route::delete('favorites/{product:id}', [FavoritesController::class, 'destroy'])->middleware('auth');
+Route::controller(FavoritesController::class)->middleware('auth')->prefix('favorites')
+    ->group(function () {
+        Route::get('', 'index');
+        Route::post('/{product:id}', 'store');
+        Route::delete('/{product:id}', 'destroy');
+    });
 //Email verification
-Route::controller(EmailVerificationController::class)->middleware(['auth'])->name('verification.')
-    ->prefix('email')->group(function () {
+Route::controller(EmailVerificationController::class)->middleware(['can:not-verified', 'auth'])
+    ->name('verification.')->prefix('email')->group(function () {
+        Route::get('/notice', 'notice')->name('notice');
         Route::get('/verify/{id}/{hash}', 'verify')->middleware(['signed'])->name('verify');
         Route::post('/verification-notification', 'send')
-            ->middleware(['can:not-verified', 'throttle:2,1'])->name('send');
+            ->middleware(['throttle:2,1'])->name('send');
     });
 //Password reset
 Route::controller(ResetPasswordController::class)->name('password.')->group(function () {

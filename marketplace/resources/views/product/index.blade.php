@@ -1,4 +1,3 @@
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <x-layout script="product/index">
     <div class="container">
         <div class="border-bottom d-inline-block mb-2">

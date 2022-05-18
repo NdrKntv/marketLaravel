@@ -7,6 +7,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
     <title>Document</title>
 </head>
@@ -46,30 +47,17 @@
             </form>
             <div class="col-4 nav-item d-flex justify-content-end px-0">
                 @auth()
-                    <div class="dropdown mx-4" id="favorites-list">
+                    <div class="dropdown mx-4">
                         <button class="btn btn-secondary dropdown-toggle" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                             Favorites
                             <span id="favorites-count"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-{{--                                {{$favorites->count()}}--}}
+                                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                                ...
                             </span>
                         </button>
-                        <ul class="dropdown-menu" style="max-height: 350px; width: 250px; overflow-y: scroll">
-                            {{--                            @foreach($favorites as $fav)--}}
-                            {{--                                <li>--}}
-                            {{--                                    <a class="dropdown-item {{request()->is('products/'.$fav->slug)?'bg-secondary text-white':''}}"--}}
-                            {{--                                       href="/{{'products/'.$fav->slug}}">--}}
-                            {{--                                        <h5 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%"--}}
-                            {{--                                        >{{$fav->title}}</h5>--}}
-                            {{--                                        <div>--}}
-                            {{--                                            <span class="fw-bold">{{$fav->price}}$</span>--}}
-                            {{--                                            <span>{{$fav->in_stock}}</span>--}}
-                            {{--                                        </div>--}}
-                            {{--                                        <div>From: {{$fav->category->title}}</div>--}}
-                            {{--                                    </a>--}}
-                            {{--                                </li>--}}
-                            {{--                            @endforeach--}}
+                        <ul class="dropdown-menu" id="favorites-list"
+                            style="max-height: 350px; width: 250px; overflow-y: scroll">
                         </ul>
                     </div>
                     <div class="dropdown">
